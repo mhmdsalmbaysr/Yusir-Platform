@@ -12,6 +12,7 @@ const CART_KEY = "yusir_cart_v1";
 const STATE = {
     cart: loadCart(),    // مصفوفة السلة المحلية (محفوظة في المتصفح)
     storesById: {},      // فهرس المتاجر بالمعرّف للوصول السريع
+    markersById: {},     // فهرس مؤشرات الخريطة للفلترة
     activeStore: null    // المتجر المفتوح حالياً
 };
 
@@ -74,7 +75,9 @@ function renderStores(geojson) {
         pointToLayer: (feature, latlng) => {
             const props = feature.properties;
             STATE.storesById[props.store_id] = feature;      // فهرسة المتجر
-            return L.marker(latlng, { icon: buildStoreIcon(props.open) });
+            const marker = L.marker(latlng, { icon: buildStoreIcon(props.open) });
+            STATE.markersById[props.store_id] = marker; // مرجع للفلترة
+            return marker;
         },
         // ربط كل مؤشر بمستمع حدث النقر (Event Listener)
         onEachFeature: (feature, lyr) => {
@@ -89,6 +92,34 @@ function renderStores(geojson) {
 
     // ملاءمة حدود العرض لتشمل كل المتاجر
     try { map.fitBounds(layer.getBounds().pad(0.2)); } catch (_) {}
+
+    STATE.storeLayer = layer;
+    setupSearch();
+}
+
+/* ------------------------------------------------------------------
+   فلترة المتاجر عبر شريط البحث (الاسم / المدينة / التصنيف)
+------------------------------------------------------------------ */
+function setupSearch() {
+    const input = document.getElementById("searchInput");
+    const counter = document.getElementById("searchCount");
+    const ids = Object.keys(STATE.storesById);
+
+    function apply() {
+        const q = input.value.trim().toLowerCase();
+        let visible = 0;
+        ids.forEach((id) => {
+            const p = STATE.storesById[id].properties;
+            const hay = `${p.name} ${p.city} ${p.neighborhood} ${p.category}`.toLowerCase();
+            const match = !q || hay.includes(q);
+            const marker = STATE.markersById[id];
+            if (match) { if (!map.hasLayer(marker)) marker.addTo(map); visible++; }
+            else if (map.hasLayer(marker)) map.removeLayer(marker);
+        });
+        counter.textContent = q ? `${visible} نتيجة` : `${ids.length} متجر`;
+    }
+    input.addEventListener("input", apply);
+    apply();
 }
 
 /* ------------------------------------------------------------------

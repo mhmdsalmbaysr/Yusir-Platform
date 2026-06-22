@@ -73,6 +73,21 @@
 .btn-copy:hover { background: #eceff1; }
 code { background: var(--bg); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
 
+.gov-label {
+    background: none !important;
+    border: none !important;
+    font-size: 13px;
+    font-weight: 800;
+    color: #2d3436;
+    text-shadow: 0 1px 4px rgba(255,255,255,.95), 0 0 10px rgba(255,255,255,.8);
+    font-family: 'Cairo', sans-serif;
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: .85;
+    letter-spacing: .5px;
+}
+
 @media (max-width: 760px) {
     .admin-layout { grid-template-columns: 1fr; height: auto; }
     .admin-map-wrap { height: 50vh; }

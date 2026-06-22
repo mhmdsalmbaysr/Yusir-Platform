@@ -7,23 +7,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/dashboard.css">
+  <script>if (!sessionStorage.getItem("yusir_merchant_session")) location.replace("login.html?redirect=merchant");</script>
 </head>
 <body>
 
-  <!-- تسجيل الدخول -->
-  <div id="login" class="login-screen">
-    <div class="login-box">
-      <div class="logo"><i class="fas fa-store"></i> يُسر</div>
-      <div class="sub">لوحة تحكم التاجر</div>
-      <div class="fld"><label>البريد الإلكتروني</label><input id="lgEmail" placeholder="owner@example.com"></div>
-      <div class="fld"><label>كلمة المرور</label><input id="lgPass" type="password" placeholder="••••••••"></div>
-      <button class="btn btn-p" id="lgBtn">دخول</button>
-      <div class="login-err" id="lgErr"></div>
-    </div>
-  </div>
-
-  <!-- التطبيق -->
-  <div id="app" class="hidden">
+  <div id="app">
     <div class="dash-top">
       <div class="b"><i class="fas fa-store"></i> يُسر <span class="badge" id="storeBadge">متجري</span></div>
       <div class="right">

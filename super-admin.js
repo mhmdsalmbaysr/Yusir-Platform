@@ -19,17 +19,12 @@ const PLANS = {
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Number(n).toLocaleString("ar-EG");
 
-/* ---------- تسجيل الدخول ---------- */
-function showApp() { $("login").classList.add("hidden"); $("app").classList.remove("hidden"); init(); }
-if (sessionStorage.getItem(SESSION_KEY) === "1") showApp();
-
-$("lgBtn").addEventListener("click", () => {
-  if ($("lgUser").value.trim() === SA.user && $("lgPass").value === SA.pass) {
-    sessionStorage.setItem(SESSION_KEY, "1"); showApp();
-  } else { $("lgErr").textContent = "بيانات الدخول غير صحيحة"; }
-});
-$("lgPass").addEventListener("keydown", (e) => { if (e.key === "Enter") $("lgBtn").click(); });
+/* ---------- استعادة الجلسة ---------- */
 $("logout").addEventListener("click", () => { sessionStorage.removeItem(SESSION_KEY); location.reload(); });
+
+(function () {
+  if (sessionStorage.getItem(SESSION_KEY) === "1") init();
+})();
 
 /* ---------- مخزن المتاجر ---------- */
 function loadMerchants() { try { return JSON.parse(localStorage.getItem(MKEY)) || []; } catch (_) { return []; } }

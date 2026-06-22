@@ -85,6 +85,35 @@
         <!-- حاوية المنتجات الديناميكية -->
         <div id="productsContainer" class="products-grid"></div>
         <div id="noProducts" class="no-products" style="display:none">لا توجد منتجات مطابقة</div>
+
+        <!-- ===== قسم التقييمات والمراجعات ===== -->
+        <div class="reviews-section">
+            <div class="reviews-head">
+                <h3><i class="fas fa-comments"></i> التقييمات والمراجعات</h3>
+                <div class="reviews-summary">
+                    <span id="revAvg" class="rev-avg">0.0</span>
+                    <span id="revStars" class="rev-stars"></span>
+                    <span id="revCount" class="rev-count"></span>
+                </div>
+            </div>
+
+            <!-- نموذج إضافة مراجعة -->
+            <div class="review-form">
+                <input id="revName" placeholder="اسمك" autocomplete="off">
+                <div class="star-input" id="starInput">
+                    <i class="far fa-star" data-v="1"></i>
+                    <i class="far fa-star" data-v="2"></i>
+                    <i class="far fa-star" data-v="3"></i>
+                    <i class="far fa-star" data-v="4"></i>
+                    <i class="far fa-star" data-v="5"></i>
+                </div>
+                <textarea id="revText" rows="2" placeholder="شارك تجربتك مع هذا المتجر…"></textarea>
+                <button id="revSubmit" class="btn-add"><i class="fas fa-paper-plane"></i> أضف مراجعتك</button>
+            </div>
+
+            <!-- قائمة المراجعات -->
+            <div id="reviewsList" class="reviews-list"></div>
+        </div>
     </aside>
 
     <!-- ===== نافذة تفاصيل المنتج (Quick View) ===== -->

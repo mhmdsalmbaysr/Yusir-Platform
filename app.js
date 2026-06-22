@@ -156,7 +156,90 @@ function openStore(storeId) {
     renderProducts();
 
     // --- التحريك البصري: تفعيل اللوحة الجانبية (right: -400px → 0) ---
+    renderReviews(p.store_id);
+    document.getElementById("revName").value = "";
+    document.getElementById("revText").value = "";
+    setStarInput(0);
     openPanel("storeSidebar");
+}
+
+/* ------------------------------------------------------------------
+   نظام التقييمات والمراجعات (يُحفظ في متصفح العميل)
+------------------------------------------------------------------ */
+const REVIEWS_KEY = "yusir_reviews_v1";
+function loadReviews() {
+    try { return JSON.parse(localStorage.getItem(REVIEWS_KEY)) || {}; }
+    catch (_) { return {}; }
+}
+function saveReviews(obj) {
+    try { localStorage.setItem(REVIEWS_KEY, JSON.stringify(obj)); } catch (_) {}
+}
+function starsHtml(n) {
+    let s = "";
+    for (let i = 1; i <= 5; i++) s += `<i class="fa${i <= Math.round(n) ? "s" : "r"} fa-star"></i>`;
+    return s;
+}
+function setStarInput(v) {
+    STATE.reviewStars = v;
+    document.querySelectorAll("#starInput i").forEach((el) => {
+        const on = parseInt(el.dataset.v) <= v;
+        el.className = (on ? "fas" : "far") + " fa-star";
+    });
+}
+function renderReviews(storeId) {
+    const store = STATE.storesById[storeId];
+    const baseRating = store ? (store.properties.rating || 0) : 0;
+    const all = loadReviews()[storeId] || [];
+
+    // المتوسط = تقييم المتجر الأساسي + مراجعات العملاء
+    const nums = all.map((r) => r.stars);
+    const avg = (baseRating + nums.reduce((a, b) => a + b, 0)) / (1 + nums.length);
+
+    document.getElementById("revAvg").textContent = avg.toFixed(1);
+    document.getElementById("revStars").innerHTML = starsHtml(avg);
+    document.getElementById("revCount").textContent = `(${all.length} مراجعة عميل)`;
+
+    const list = document.getElementById("reviewsList");
+    list.innerHTML = "";
+    if (all.length === 0) {
+        list.innerHTML = '<div class="reviews-empty">كن أول من يكتب مراجعة لهذا المتجر ✍️</div>';
+        return;
+    }
+    all.slice().reverse().forEach((r) => {
+        const card = document.createElement("div");
+        card.className = "review-card";
+        card.innerHTML = `
+            <div class="rc-top">
+                <span class="rc-name">${escapeHtml(r.name)}</span>
+                <span class="rc-stars">${starsHtml(r.stars)}</span>
+            </div>
+            <div class="rc-text">${escapeHtml(r.text)}</div>
+            <div class="rc-date">${r.date}</div>`;
+        list.appendChild(card);
+    });
+}
+function submitReview() {
+    if (!STATE.activeStore) return;
+    const name = document.getElementById("revName").value.trim();
+    const text = document.getElementById("revText").value.trim();
+    const stars = STATE.reviewStars || 0;
+    if (!name || !text || !stars) { showToast("⚠️ أدخل اسمك، تقييماً بالنجوم، ونص المراجعة"); return; }
+
+    const storeId = STATE.activeStore.store_id;
+    const data = loadReviews();
+    (data[storeId] = data[storeId] || []).push({
+        name, text, stars,
+        date: new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" })
+    });
+    saveReviews(data);
+    document.getElementById("revName").value = "";
+    document.getElementById("revText").value = "";
+    setStarInput(0);
+    renderReviews(storeId);
+    showToast("✅ شكراً! نُشرت مراجعتك");
+}
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
 /* بناء شريط التصنيفات داخل المتجر */
@@ -444,6 +527,12 @@ document.getElementById("checkoutModal").addEventListener("click", (e) => {
     if (e.target.id === "checkoutModal") e.currentTarget.classList.remove("active");
 });
 document.getElementById("coSubmit").addEventListener("click", submitOrder);
+
+// تقييمات المتاجر — إدخال النجوم والإرسال
+document.querySelectorAll("#starInput i").forEach((el) => {
+    el.addEventListener("click", () => setStarInput(parseInt(el.dataset.v)));
+});
+document.getElementById("revSubmit").addEventListener("click", submitReview);
 
 // تهيئة عرض السلة عند الإقلاع
 refreshCart();

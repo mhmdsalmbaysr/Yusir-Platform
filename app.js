@@ -8,11 +8,21 @@
 /* ------------------------------------------------------------------
    الحالة العامة (Global State)
 ------------------------------------------------------------------ */
+const CART_KEY = "yusir_cart_v1";
 const STATE = {
-    cart: [],            // مصفوفة السلة المحلية (Cart Array)
+    cart: loadCart(),    // مصفوفة السلة المحلية (محفوظة في المتصفح)
     storesById: {},      // فهرس المتاجر بالمعرّف للوصول السريع
     activeStore: null    // المتجر المفتوح حالياً
 };
+
+// حفظ/استرجاع السلة من localStorage لتبقى بعد تحديث الصفحة
+function loadCart() {
+    try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
+    catch (_) { return []; }
+}
+function saveCart() {
+    try { localStorage.setItem(CART_KEY, JSON.stringify(STATE.cart)); } catch (_) {}
+}
 
 const fmt = (n) => Number(n).toLocaleString("ar-EG"); // تنسيق الأرقام
 
@@ -155,6 +165,7 @@ function addToCart(storeId, product) {
             qty: 1
         });
     }
+    saveCart();
     refreshCart();
     showToast(`✅ أُضيف «${product.name}» إلى السلة`);
 }
@@ -166,6 +177,7 @@ function changeQty(id, storeId, delta) {
     if (item.qty <= 0) {
         STATE.cart = STATE.cart.filter((it) => !(it.id === id && it.store_id === storeId));
     }
+    saveCart();
     refreshCart();
 }
 
@@ -216,15 +228,37 @@ function refreshCart() {
 ------------------------------------------------------------------ */
 function checkout() {
     if (STATE.cart.length === 0) return;
-    let msg = "🛒 طلب جديد من منصة يُسر:%0A%0A";
+
+    // تجميع عناصر السلة حسب المتجر — كل متجر يستلم طلبه على رقمه الخاص
+    const groups = {};
     STATE.cart.forEach((it) => {
-        const store = STATE.storesById[it.store_id];
-        const storeName = store ? store.properties.name : it.store_id;
-        msg += `• ${it.name} (${storeName}) ×${it.qty} = ${fmt(it.price * it.qty)} ريال%0A`;
+        (groups[it.store_id] = groups[it.store_id] || []).push(it);
     });
-    msg += `%0A💰 الإجمالي: ${fmt(cartTotal())} ريال`;
-    // فتح واتساب لإرسال الطلب (يمكن استبداله ببوابة دفع لاحقاً)
-    window.open("https://wa.me/?text=" + msg, "_blank");
+
+    const storeIds = Object.keys(groups);
+    storeIds.forEach((sid, idx) => {
+        const store = STATE.storesById[sid];
+        const props = store ? store.properties : {};
+        const storeName = props.name || sid;
+        let total = 0;
+        let msg = `🛒 طلب جديد من منصة يُسر%0A🏪 المتجر: ${storeName}%0A%0A`;
+        groups[sid].forEach((it) => {
+            total += it.price * it.qty;
+            msg += `• ${it.name} ×${it.qty} = ${fmt(it.price * it.qty)} ريال%0A`;
+        });
+        if (props.delivery_fee) { total += props.delivery_fee; msg += `🛵 التوصيل: ${fmt(props.delivery_fee)} ريال%0A`; }
+        msg += `%0A💰 الإجمالي: ${fmt(total)} ريال`;
+
+        // توجيه الطلب لرقم واتساب المتجر إن وُجد، وإلا رابط عام
+        const phone = (props.phone || "").replace(/[^0-9]/g, "");
+        const url = phone ? `https://wa.me/${phone}?text=${msg}` : `https://wa.me/?text=${msg}`;
+        // فتح نافذة لكل متجر (بفاصل بسيط لتجنّب حجب المتصفح للنوافذ المنبثقة)
+        setTimeout(() => window.open(url, "_blank"), idx * 350);
+    });
+
+    if (storeIds.length > 1) {
+        showToast(`📦 تم تجهيز ${storeIds.length} طلبات (متجر لكل طلب)`);
+    }
 }
 
 /* ------------------------------------------------------------------

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم يُسر — إدارة المتاجر والمنتجات</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body class="admin-body">
+
+    <header class="topbar">
+        <div class="brand"><i class="fas fa-sliders"></i> <span>لوحة تحكم <strong>يُسر</strong></span></div>
+        <div class="topbar-actions">
+            <a href="index.html" class="link-btn"><i class="fas fa-store"></i> عرض المنصة</a>
+        </div>
+    </header>
+
+    <div class="admin-layout">
+        <!-- العمود الأيمن: النموذج -->
+        <section class="admin-panel">
+            <div class="panel-block">
+                <h3><i class="fas fa-map-location-dot"></i> 1) موقع المتجر</h3>
+                <p class="hint">انقر على الخريطة لتحديد الإحداثيات تلقائياً.</p>
+                <div class="row2">
+                    <div class="fld"><label>خط العرض (lat)</label><input id="f_lat" readonly></div>
+                    <div class="fld"><label>خط الطول (lng)</label><input id="f_lng" readonly></div>
+                </div>
+            </div>
+
+            <div class="panel-block">
+                <h3><i class="fas fa-store"></i> 2) بيانات المتجر</h3>
+                <div class="fld"><label>اسم المتجر *</label><input id="f_name" placeholder="مثلاً: بقالة الهناء"></div>
+                <div class="row2">
+                    <div class="fld"><label>التصنيف</label><input id="f_cat" placeholder="بقالة"></div>
+                    <div class="fld"><label>التقييم</label><input id="f_rating" type="number" step="0.1" min="0" max="5" value="4.5"></div>
+                </div>
+                <div class="row2">
+                    <div class="fld"><label>المدينة</label><input id="f_city" placeholder="صنعاء"></div>
+                    <div class="fld"><label>الحي</label><input id="f_hood" placeholder="حدة"></div>
+                </div>
+                <div class="row2">
+                    <div class="fld"><label>واتساب (دولي)</label><input id="f_phone" placeholder="+967770000000"></div>
+                    <div class="fld"><label>رسوم التوصيل</label><input id="f_delivery" type="number" min="0" value="500"></div>
+                </div>
+                <div class="fld"><label>رابط صورة المتجر</label><input id="f_image" placeholder="https://..."></div>
+                <label class="chk"><input type="checkbox" id="f_open" checked> المتجر مفتوح الآن</label>
+            </div>
+
+            <div class="panel-block">
+                <h3><i class="fas fa-box-open"></i> 3) المنتجات</h3>
+                <div id="prodList" class="prod-list"></div>
+                <div class="prod-form">
+                    <input id="p_name" placeholder="اسم المنتج">
+                    <div class="row2">
+                        <input id="p_price" type="number" placeholder="السعر">
+                        <input id="p_unit" placeholder="الوحدة (كيس)">
+                    </div>
+                    <input id="p_image" placeholder="رابط صورة المنتج">
+                    <button class="btn-add-prod" id="addProdBtn"><i class="fas fa-plus"></i> إضافة منتج للقائمة</button>
+                </div>
+            </div>
+
+            <div class="panel-actions">
+                <button class="btn-save-store" id="saveStoreBtn"><i class="fas fa-circle-check"></i> حفظ المتجر</button>
+            </div>
+
+            <div class="panel-block">
+                <h3><i class="fas fa-database"></i> المتاجر المُسجّلة (<span id="storeCount">0</span>)</h3>
+                <div id="savedStores" class="saved-stores"></div>
+                <div class="export-row">
+                    <button class="btn-export" id="downloadBtn"><i class="fas fa-download"></i> تنزيل stores.geojson</button>
+                    <button class="btn-copy" id="copyBtn"><i class="fas fa-copy"></i> نسخ JSON</button>
+                </div>
+                <p class="hint">حمّل الملف وارفعه إلى <code>data/stores.geojson</code> في المستودع لتحديث المنصة.</p>
+            </div>
+        </section>
+
+        <!-- العمود الأيسر: الخريطة -->
+        <section class="admin-map-wrap">
+            <div id="map"></div>
+        </section>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <script src="admin.js"></script>
+</body>
+</html>

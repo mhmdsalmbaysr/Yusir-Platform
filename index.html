@@ -2,173 +2,98 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="utf-8">
-    <title>نظام الإدخال الميداني الذكي</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
-    
-    <style>
-        body { margin:0; font-family: 'Segoe UI', Arial, sans-serif; }
-        #map { height: 100vh; width: 100%; }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة يُسر — تسوّق من متاجر اليمن على الخريطة</title>
 
-        /* تصميم نافذة الإدخال */
-        .input-card {
-            position: absolute; top: 20px; left: 20px; z-index: 2000;
-            background: white; width: 320px; padding: 20px;
-            border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            display: none; /* تظهر فقط عند النقر */
-        }
-        .input-card h3 { margin-top: 0; color: #d63031; font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 13px; color: #666; margin-bottom: 5px; }
-        .form-group input { 
-            width: 100%; padding: 8px; border: 1px solid #ddd; 
-            border-radius: 5px; box-sizing: border-box; font-size: 14px;
-        }
-        .form-group input[readonly] { background: #f9f9f9; color: #2d3436; font-weight: bold; border-color: #eee; }
-        
-        .btn-save { 
-            background: #27ae60; color: white; border: none; padding: 10px; 
-            width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 15px;
-        }
-        .btn-save:hover { background: #219150; }
-        .hint { font-size: 11px; color: #999; text-align: center; margin-top: 10px; }
-    </style>
+    <!-- مكتبة الخرائط Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <!-- أيقونات Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- خط عربي -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- التنسيقات -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
-<div id="map"></div>
+    <!-- شريط علوي -->
+    <header class="topbar">
+        <div class="brand">
+            <i class="fas fa-store-alt"></i>
+            <span>منصة <strong>يُسر</strong></span>
+        </div>
+        <div class="topbar-actions">
+            <button id="cartToggle" class="cart-btn" aria-label="عربة التسوق">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cartBadge" class="cart-badge">0</span>
+            </button>
+        </div>
+    </header>
 
-<div id="inputForm" class="input-card">
-    <h3><i class="fas fa-map-pin"></i> تسجيل موقع جديد</h3>
-    
-    <div class="form-group">
-        <label>المحافظة (تلقائي):</label>
-        <input type="text" id="gov_name" readonly>
-    </div>
-    
-    <div class="form-group">
-        <label>المديرية (تلقائي):</label>
-        <input type="text" id="dist_name" readonly>
-    </div>
+    <!-- حاوية الخريطة -->
+    <div id="map"></div>
 
-    <hr>
-
-    <div class="form-group">
-        <label>اسم المدينة / القرية:</label>
-        <input type="text" id="city_name" placeholder="مثلاً: مدينة عبس">
-    </div>
-
-    <div class="form-group">
-        <label>اسم الحارة / المنطقة:</label>
-        <input type="text" id="hood_name" placeholder="مثلاً: حارة السلام">
+    <!-- شاشة التحميل -->
+    <div id="loader" class="loader">
+        <div class="spinner"></div>
+        <p>جاري تحميل المتاجر على الخريطة…</p>
     </div>
 
-    <div class="form-group">
-        <label>اسم المحل / المعلم:</label>
-        <input type="text" id="shop_name" placeholder="مثلاً: تموينات الهناء">
-    </div>
+    <!-- ===== اللوحة الجانبية للمتجر (Store Sidebar) ===== -->
+    <aside id="storeSidebar" class="store-sidebar">
+        <button id="closeSidebar" class="close-btn" aria-label="إغلاق"><i class="fas fa-times"></i></button>
 
-    <button class="btn-save" onclick="processData()">حفظ البيانات وتوليد JSON</button>
-    <button onclick="hideForm()" style="background:none; border:none; color:#999; width:100%; margin-top:10px; cursor:pointer;">إلغاء</button>
-    
-    <div class="hint">سيتم استخراج الـ P-codes تلقائياً عند الحفظ</div>
-</div>
+        <div class="store-hero">
+            <img id="storeImage" src="" alt="صورة المتجر">
+            <div class="store-hero-overlay">
+                <span id="storeStatus" class="status-pill"></span>
+            </div>
+        </div>
 
-<script>
-    var map = L.map('map').setView([15.5, 48.0], 6);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        <div class="store-head">
+            <h2 id="storeName"></h2>
+            <div class="store-meta">
+                <span id="storeCategory" class="meta-chip"></span>
+                <span class="meta-chip"><i class="fas fa-location-dot"></i> <span id="storeLocation"></span></span>
+                <span class="meta-chip"><i class="fas fa-star"></i> <span id="storeRating"></span></span>
+            </div>
+            <p class="store-delivery"><i class="fas fa-motorcycle"></i> رسوم التوصيل: <span id="storeDelivery"></span></p>
+        </div>
 
-    var districtsData;
-    var lastClickedLatLng;
-    var currentAdmin = {};
+        <div class="products-head">
+            <h3><i class="fas fa-box-open"></i> المنتجات</h3>
+        </div>
 
-    // 1. تحميل ملف المديريات للفحص الجغرافي
-    fetch('data/yem_admin2.geojson')
-        .then(res => res.json())
-        .then(data => {
-            districtsData = data;
-            // عرض حدود خفيفة للمديريات
-            L.geoJSON(data, { style: { color: "#ccc", weight: 1, fillOpacity: 0 } }).addTo(map);
-        });
+        <!-- حاوية المنتجات الديناميكية -->
+        <div id="productsContainer" class="products-grid"></div>
+    </aside>
 
-    // 2. حدث النقر على الخريطة
-    map.on('click', function(e) {
-        lastClickedLatLng = e.latlng;
-        var pt = turf.point([e.latlng.lng, e.latlng.lat]);
-        
-        var found = false;
-        if (districtsData) {
-            turf.featureEach(districtsData, function(f) {
-                if (turf.booleanPointInPolygon(pt, f)) {
-                    currentAdmin = f.properties;
-                    found = true;
-                }
-            });
-        }
+    <!-- ===== لوحة عربة التسوق (Cart Panel) ===== -->
+    <aside id="cartPanel" class="cart-panel">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> عربة التسوق</h3>
+            <button id="closeCart" class="close-btn" aria-label="إغلاق"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="cartItems" class="cart-items"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>الإجمالي</span>
+                <span id="cartTotal">0 ريال</span>
+            </div>
+            <button id="checkoutBtn" class="btn-checkout"><i class="fab fa-whatsapp"></i> إتمام الطلب</button>
+        </div>
+    </aside>
 
-        if (found) {
-            showForm(currentAdmin.adm1_name1, currentAdmin.adm2_name1);
-        } else {
-            alert("عذراً، هذا الموقع يقع خارج حدود المديريات المعرفة في النظام.");
-        }
-    });
+    <!-- خلفية معتمة عند فتح اللوحات -->
+    <div id="backdrop" class="backdrop"></div>
 
-    function showForm(gov, dist) {
-        document.getElementById('gov_name').value = gov;
-        document.getElementById('dist_name').value = dist;
-        document.getElementById('inputForm').style.display = 'block';
-    }
+    <!-- إشعار منبثق -->
+    <div id="toast" class="toast"></div>
 
-    function hideForm() {
-        document.getElementById('inputForm').style.display = 'none';
-        document.getElementById('city_name').value = "";
-        document.getElementById('hood_name').value = "";
-        document.getElementById('shop_name').value = "";
-    }
-
-    function processData() {
-        var cityName = document.getElementById('city_name').value;
-        var hoodName = document.getElementById('hood_name').value;
-        var shopName = document.getElementById('shop_name').value;
-
-        if (!cityName || !shopName) {
-            alert("يرجى تعبئة الحقول الأساسية (المدينة واسم المحل)");
-            return;
-        }
-
-        // بناء كائن الـ GeoJSON المتوافق مع ملفك yem_field_data.geojson
-        var feature = {
-            "type": "Feature",
-            "properties": {
-                "level": "store",
-                "adm1_name": currentAdmin.adm1_name1,
-                "adm1_pcode": currentAdmin.adm1_pcode,
-                "adm2_name": currentAdmin.adm2_name1,
-                "adm2_pcode": currentAdmin.adm2_pcode,
-                "city": cityName,
-                "neighborhood": hoodName,
-                "store_name": shopName,
-                "collected_at": new Date().toISOString()
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": [lastClickedLatLng.lng, lastClickedLatLng.lat]
-            }
-        };
-
-        // مخرجات النظام
-        console.log("تم تكوين العنصر الجديد بنجاح:");
-        console.log(JSON.stringify(feature, null, 2));
-
-        // إضافة ماركر مؤقت للخريطة للتأكيد البصري
-        L.marker(lastClickedLatLng).addTo(map)
-            .bindPopup(`<b>${shopName}</b><br>${cityName} - ${hoodName}`).openPopup();
-
-        alert("تم استخراج البيانات بنجاح! راجع الـ Console (F12) لنسخ الكود وإضافته لملف GeoJSON.");
-        hideForm();
-    }
-</script>
+    <!-- منطق التطبيق -->
+    <script src="app.js"></script>
 </body>
 </html>

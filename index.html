@@ -72,11 +72,45 @@
 
         <div class="products-head">
             <h3><i class="fas fa-box-open"></i> المنتجات</h3>
+            <div class="store-search">
+                <i class="fas fa-magnifying-glass"></i>
+                <input id="productSearch" type="text" placeholder="ابحث داخل المتجر…" autocomplete="off">
+            </div>
         </div>
+
+        <!-- شريط تصنيفات المنتجات -->
+        <div id="categoryBar" class="category-bar"></div>
 
         <!-- حاوية المنتجات الديناميكية -->
         <div id="productsContainer" class="products-grid"></div>
+        <div id="noProducts" class="no-products" style="display:none">لا توجد منتجات مطابقة</div>
     </aside>
+
+    <!-- ===== نافذة تفاصيل المنتج (Quick View) ===== -->
+    <div id="productModal" class="product-modal">
+        <div class="pm-card">
+            <button id="pmClose" class="pm-close" aria-label="إغلاق"><i class="fas fa-times"></i></button>
+            <div class="pm-img"><img id="pmImage" src="" alt="منتج"></div>
+            <div class="pm-body">
+                <span id="pmCategory" class="pm-cat"></span>
+                <h2 id="pmName"></h2>
+                <div class="pm-rating"><i class="fas fa-star"></i> <span id="pmRating"></span></div>
+                <p id="pmDesc" class="pm-desc"></p>
+                <div class="pm-price-row">
+                    <span id="pmPrice" class="pm-price"></span>
+                    <span id="pmOld" class="pm-old"></span>
+                </div>
+                <div class="pm-actions">
+                    <div class="stepper">
+                        <button id="pmMinus">−</button>
+                        <span id="pmQty">1</span>
+                        <button id="pmPlus">+</button>
+                    </div>
+                    <button id="pmAdd" class="pm-add"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- ===== لوحة عربة التسوق (Cart Panel) ===== -->
     <aside id="cartPanel" class="cart-panel">

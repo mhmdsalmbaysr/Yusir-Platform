@@ -146,46 +146,115 @@ function openStore(storeId) {
     status.className = "status-pill " + (p.open ? "open" : "closed");
 
     // --- تصفير حاوية المنتجات لتجنّب تداخل متجر آخر ---
+    STATE.activeProducts = p.products || [];
+    STATE.activeCategory = "الكل";
+    document.getElementById("productSearch").value = "";
+    buildCategoryBar(STATE.activeProducts);
+    renderProducts();
+
+    // --- التحريك البصري: تفعيل اللوحة الجانبية (right: -400px → 0) ---
+    openPanel("storeSidebar");
+}
+
+/* بناء شريط التصنيفات داخل المتجر */
+function buildCategoryBar(products) {
+    const cats = ["الكل", ...Array.from(new Set(products.map((p) => p.category || "عام")))];
+    const bar = document.getElementById("categoryBar");
+    bar.innerHTML = "";
+    cats.forEach((c) => {
+        const chip = document.createElement("button");
+        chip.className = "cat-chip" + (c === STATE.activeCategory ? " active" : "");
+        chip.textContent = c;
+        chip.addEventListener("click", () => {
+            STATE.activeCategory = c;
+            bar.querySelectorAll(".cat-chip").forEach((x) => x.classList.toggle("active", x.textContent === c));
+            renderProducts();
+        });
+        bar.appendChild(chip);
+    });
+}
+
+/* عرض المنتجات وفق التصنيف والبحث النشطين */
+function renderProducts() {
     const container = document.getElementById("productsContainer");
+    const q = document.getElementById("productSearch").value.trim().toLowerCase();
     container.innerHTML = "";
 
-    // --- حلقة تكرارية لتوليد بطاقات المنتجات ديناميكياً (Template Literals) ---
-    (p.products || []).forEach((product) => {
+    const list = STATE.activeProducts.filter((p) => {
+        const okCat = STATE.activeCategory === "الكل" || (p.category || "عام") === STATE.activeCategory;
+        const okSearch = !q || `${p.name} ${p.desc || ""}`.toLowerCase().includes(q);
+        return okCat && okSearch;
+    });
+
+    document.getElementById("noProducts").style.display = list.length ? "none" : "block";
+
+    list.forEach((product) => {
+        const hasDiscount = product.old_price && product.old_price > product.price;
+        const off = hasDiscount ? Math.round((1 - product.price / product.old_price) * 100) : 0;
         const card = document.createElement("div");
         card.className = "product-card";
         card.innerHTML = `
             <div class="p-img">
                 <img src="${product.image}" alt="${product.name}" loading="lazy"
                      onerror="this.src='https://via.placeholder.com/300x200?text=%E2%80%94'">
+                ${hasDiscount ? `<span class="discount-badge">خصم ${off}%</span>` : ""}
+                ${product.rating ? `<span class="rating-badge"><i class="fas fa-star"></i> ${product.rating}</span>` : ""}
                 ${product.in_stock ? "" : '<div class="out-badge">نفد المخزون</div>'}
             </div>
             <div class="p-body">
+                <div class="p-cat">${product.category || "عام"}</div>
                 <div class="p-name">${product.name}</div>
-                <div class="p-price">${fmt(product.price)} <small>ريال / ${product.unit || "وحدة"}</small></div>
-                <button class="btn-add" ${product.in_stock ? "" : "disabled"}
-                        data-pid="${product.id}">
+                <div class="price-line">
+                    <span class="p-price">${fmt(product.price)} <small>ريال / ${product.unit || "وحدة"}</small></span>
+                    ${hasDiscount ? `<span class="p-old">${fmt(product.old_price)}</span>` : ""}
+                </div>
+                <button class="btn-add" ${product.in_stock ? "" : "disabled"}>
                     <i class="fas fa-plus"></i> ${product.in_stock ? "إضافة للسلة" : "غير متوفر"}
                 </button>
             </div>`;
-        // ربط زر الإضافة للسلة
+        // النقر على البطاقة يفتح نافذة التفاصيل (Quick View)
+        card.addEventListener("click", (e) => {
+            if (e.target.closest(".btn-add")) return;
+            openProductModal(product);
+        });
         const btn = card.querySelector(".btn-add");
         if (product.in_stock) {
-            btn.addEventListener("click", () => addToCart(p.store_id, product));
+            btn.addEventListener("click", () => addToCart(STATE.activeStore.store_id, product));
         }
         container.appendChild(card);
     });
+}
 
-    // --- التحريك البصري: تفعيل اللوحة الجانبية (right: -400px → 0) ---
-    openPanel("storeSidebar");
+/* نافذة تفاصيل المنتج مع منتقي الكمية */
+function openProductModal(product) {
+    STATE.modalProduct = product;
+    STATE.modalQty = 1;
+    const hasDiscount = product.old_price && product.old_price > product.price;
+    document.getElementById("pmImage").src = product.image;
+    document.getElementById("pmImage").onerror = function () { this.src = "https://via.placeholder.com/400x300?text=%E2%80%94"; };
+    document.getElementById("pmCategory").textContent = product.category || "عام";
+    document.getElementById("pmName").textContent = product.name;
+    document.getElementById("pmRating").textContent = product.rating ? product.rating + " / 5" : "—";
+    document.getElementById("pmDesc").textContent = product.desc || "لا يوجد وصف متاح لهذا المنتج.";
+    document.getElementById("pmPrice").textContent = fmt(product.price) + " ريال";
+    document.getElementById("pmOld").textContent = hasDiscount ? fmt(product.old_price) + " ريال" : "";
+    document.getElementById("pmQty").textContent = "1";
+    const addBtn = document.getElementById("pmAdd");
+    addBtn.disabled = !product.in_stock;
+    addBtn.innerHTML = product.in_stock
+        ? '<i class="fas fa-cart-plus"></i> أضف للسلة'
+        : "غير متوفر";
+    document.getElementById("productModal").classList.add("active");
 }
 
 /* ------------------------------------------------------------------
    الخطوة 4: التفاعل مع السلة (State Management)
 ------------------------------------------------------------------ */
-function addToCart(storeId, product) {
+function addToCart(storeId, product, qty) {
+    qty = qty || 1;
     const existing = STATE.cart.find((it) => it.id === product.id && it.store_id === storeId);
     if (existing) {
-        existing.qty += 1;
+        existing.qty += qty;
     } else {
         STATE.cart.push({
             id: product.id,            // المعرّف الفريد للمنتج
@@ -193,12 +262,12 @@ function addToCart(storeId, product) {
             name: product.name,
             price: product.price,
             image: product.image,
-            qty: 1
+            qty: qty
         });
     }
     saveCart();
     refreshCart();
-    showToast(`✅ أُضيف «${product.name}» إلى السلة`);
+    showToast(`✅ أُضيف «${product.name}»${qty > 1 ? " ×" + qty : ""} إلى السلة`);
 }
 
 function changeQty(id, storeId, delta) {
@@ -325,6 +394,31 @@ document.getElementById("cartToggle").addEventListener("click", () => {
     document.getElementById("storeSidebar").classList.remove("active");
     openPanel("cartPanel");
 });
+
+// البحث داخل المتجر
+document.getElementById("productSearch").addEventListener("input", renderProducts);
+
+// عناصر نافذة تفاصيل المنتج
+function closeProductModal() { document.getElementById("productModal").classList.remove("active"); }
+document.getElementById("pmClose").addEventListener("click", closeProductModal);
+document.getElementById("productModal").addEventListener("click", (e) => {
+    if (e.target.id === "productModal") closeProductModal();
+});
+document.getElementById("pmPlus").addEventListener("click", () => {
+    STATE.modalQty++;
+    document.getElementById("pmQty").textContent = STATE.modalQty;
+});
+document.getElementById("pmMinus").addEventListener("click", () => {
+    if (STATE.modalQty > 1) STATE.modalQty--;
+    document.getElementById("pmQty").textContent = STATE.modalQty;
+});
+document.getElementById("pmAdd").addEventListener("click", () => {
+    if (STATE.modalProduct && STATE.activeStore) {
+        addToCart(STATE.activeStore.store_id, STATE.modalProduct, STATE.modalQty);
+        closeProductModal();
+    }
+});
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeProductModal(); });
 
 // تهيئة عرض السلة عند الإقلاع
 refreshCart();

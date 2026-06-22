@@ -209,6 +209,38 @@ body {
 
 .no-products { text-align: center; color: var(--muted); padding: 30px; font-size: 14px; }
 
+/* ===== قسم التقييمات والمراجعات ===== */
+.reviews-section { padding: 8px 16px 32px; border-top: 8px solid var(--bg); }
+.reviews-head h3 { margin: 14px 0 8px; font-size: 16px; }
+.reviews-head h3 i { color: var(--primary); }
+.reviews-summary { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.rev-avg { font-size: 26px; font-weight: 800; color: var(--ink); }
+.rev-stars { color: #f5a623; font-size: 15px; }
+.rev-count { font-size: 12px; color: var(--muted); }
+
+.review-form {
+    display: flex; flex-direction: column; gap: 8px;
+    background: var(--bg); padding: 12px; border-radius: 12px; margin-bottom: 14px;
+}
+.review-form input, .review-form textarea {
+    width: 100%; border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 10px; box-sizing: border-box; font-family: inherit; font-size: 13px; resize: vertical;
+}
+.review-form input:focus, .review-form textarea:focus { outline: none; border-color: var(--primary); }
+.star-input { display: flex; gap: 4px; font-size: 22px; color: #f5a623; cursor: pointer; }
+.star-input i { transition: transform 0.1s; }
+.star-input i:hover { transform: scale(1.15); }
+.review-form .btn-add { margin-top: 0; }
+
+.reviews-list { display: flex; flex-direction: column; gap: 10px; }
+.review-card { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+.review-card .rc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.review-card .rc-name { font-weight: 700; font-size: 13px; }
+.review-card .rc-stars { color: #f5a623; font-size: 12px; }
+.review-card .rc-text { font-size: 13px; color: #555; line-height: 1.6; }
+.review-card .rc-date { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.reviews-empty { text-align: center; color: var(--muted); font-size: 13px; padding: 16px; }
+
 /* ===== شبكة المنتجات ===== */
 .products-grid {
     padding: 12px 16px 28px;

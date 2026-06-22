@@ -103,22 +103,25 @@ function renderStores(geojson) {
 function setupSearch() {
     const input = document.getElementById("searchInput");
     const counter = document.getElementById("searchCount");
+    const toggle = document.getElementById("openOnlyToggle");
     const ids = Object.keys(STATE.storesById);
 
     function apply() {
         const q = input.value.trim().toLowerCase();
+        const openOnly = toggle.classList.contains("active");
         let visible = 0;
         ids.forEach((id) => {
             const p = STATE.storesById[id].properties;
             const hay = `${p.name} ${p.city} ${p.neighborhood} ${p.category}`.toLowerCase();
-            const match = !q || hay.includes(q);
+            const match = (!q || hay.includes(q)) && (!openOnly || p.open);
             const marker = STATE.markersById[id];
             if (match) { if (!map.hasLayer(marker)) marker.addTo(map); visible++; }
             else if (map.hasLayer(marker)) map.removeLayer(marker);
         });
-        counter.textContent = q ? `${visible} نتيجة` : `${ids.length} متجر`;
+        counter.textContent = (q || openOnly) ? `${visible} نتيجة` : `${ids.length} متجر`;
     }
     input.addEventListener("input", apply);
+    toggle.addEventListener("click", () => { toggle.classList.toggle("active"); apply(); });
     apply();
 }
 
@@ -328,20 +331,37 @@ function refreshCart() {
 ------------------------------------------------------------------ */
 function checkout() {
     if (STATE.cart.length === 0) return;
-
-    // تجميع عناصر السلة حسب المتجر — كل متجر يستلم طلبه على رقمه الخاص
-    const groups = {};
+    // عرض ملخص الطلب داخل النموذج ثم فتحه
+    const summary = document.getElementById("coSummary");
+    let html = "";
     STATE.cart.forEach((it) => {
-        (groups[it.store_id] = groups[it.store_id] || []).push(it);
+        html += `<div>• ${it.name} ×${it.qty} — ${fmt(it.price * it.qty)} ريال</div>`;
     });
+    html += `<div class="co-total">الإجمالي: ${fmt(cartTotal())} ريال</div>`;
+    summary.innerHTML = html;
+    closePanels();
+    document.getElementById("checkoutModal").classList.add("active");
+}
 
-    const storeIds = Object.keys(groups);
-    storeIds.forEach((sid, idx) => {
-        const store = STATE.storesById[sid];
-        const props = store ? store.properties : {};
-        const storeName = props.name || sid;
+/* إرسال الطلب بعد تعبئة بيانات العميل — طلب منفصل لكل متجر */
+function submitOrder() {
+    const name = document.getElementById("coName").value.trim();
+    const phone = document.getElementById("coPhone").value.trim();
+    const address = document.getElementById("coAddress").value.trim();
+    const notes = document.getElementById("coNotes").value.trim();
+    if (!name || !phone || !address) { showToast("⚠️ يرجى تعبئة الاسم والهاتف والعنوان"); return; }
+
+    const groups = {};
+    STATE.cart.forEach((it) => { (groups[it.store_id] = groups[it.store_id] || []).push(it); });
+
+    Object.keys(groups).forEach((sid, idx) => {
+        const props = (STATE.storesById[sid] || {}).properties || {};
         let total = 0;
-        let msg = `🛒 طلب جديد من منصة يُسر%0A🏪 المتجر: ${storeName}%0A%0A`;
+        let msg = `🛒 طلب جديد من منصة يُسر%0A`;
+        msg += `🏪 المتجر: ${props.name || sid}%0A%0A`;
+        msg += `👤 العميل: ${name}%0A📞 الهاتف: ${phone}%0A📍 العنوان: ${address}%0A`;
+        if (notes) msg += `📝 ملاحظات: ${notes}%0A`;
+        msg += `%0A— الطلبات —%0A`;
         groups[sid].forEach((it) => {
             total += it.price * it.qty;
             msg += `• ${it.name} ×${it.qty} = ${fmt(it.price * it.qty)} ريال%0A`;
@@ -349,16 +369,14 @@ function checkout() {
         if (props.delivery_fee) { total += props.delivery_fee; msg += `🛵 التوصيل: ${fmt(props.delivery_fee)} ريال%0A`; }
         msg += `%0A💰 الإجمالي: ${fmt(total)} ريال`;
 
-        // توجيه الطلب لرقم واتساب المتجر إن وُجد، وإلا رابط عام
-        const phone = (props.phone || "").replace(/[^0-9]/g, "");
-        const url = phone ? `https://wa.me/${phone}?text=${msg}` : `https://wa.me/?text=${msg}`;
-        // فتح نافذة لكل متجر (بفاصل بسيط لتجنّب حجب المتصفح للنوافذ المنبثقة)
+        const wa = (props.phone || "").replace(/[^0-9]/g, "");
+        const url = wa ? `https://wa.me/${wa}?text=${msg}` : `https://wa.me/?text=${msg}`;
         setTimeout(() => window.open(url, "_blank"), idx * 350);
     });
 
-    if (storeIds.length > 1) {
-        showToast(`📦 تم تجهيز ${storeIds.length} طلبات (متجر لكل طلب)`);
-    }
+    document.getElementById("checkoutModal").classList.remove("active");
+    STATE.cart = []; saveCart(); refreshCart();
+    showToast("✅ تم إرسال طلبك! تحقق من واتساب");
 }
 
 /* ------------------------------------------------------------------
@@ -419,6 +437,13 @@ document.getElementById("pmAdd").addEventListener("click", () => {
     }
 });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeProductModal(); });
+
+// نموذج إتمام الطلب
+document.getElementById("coClose").addEventListener("click", () => document.getElementById("checkoutModal").classList.remove("active"));
+document.getElementById("checkoutModal").addEventListener("click", (e) => {
+    if (e.target.id === "checkoutModal") e.currentTarget.classList.remove("active");
+});
+document.getElementById("coSubmit").addEventListener("click", submitOrder);
 
 // تهيئة عرض السلة عند الإقلاع
 refreshCart();

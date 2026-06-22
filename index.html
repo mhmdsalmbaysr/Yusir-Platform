@@ -41,6 +41,7 @@
         <i class="fas fa-magnifying-glass"></i>
         <input id="searchInput" type="text" placeholder="ابحث عن متجر أو مدينة أو تصنيف…" autocomplete="off">
         <span id="searchCount" class="search-count"></span>
+        <button id="openOnlyToggle" class="open-toggle" title="المتاجر المفتوحة فقط"><i class="fas fa-clock"></i></button>
     </div>
 
     <!-- شاشة التحميل -->
@@ -133,6 +134,23 @@
 
     <!-- إشعار منبثق -->
     <div id="toast" class="toast"></div>
+
+    <!-- ===== نموذج إتمام الطلب ===== -->
+    <div id="checkoutModal" class="product-modal">
+        <div class="pm-card co-card">
+            <button id="coClose" class="pm-close" aria-label="إغلاق"><i class="fas fa-times"></i></button>
+            <div class="co-body">
+                <h2><i class="fas fa-clipboard-check"></i> إتمام الطلب</h2>
+                <p class="co-sub">أدخل بياناتك لإرسال الطلب إلى المتجر عبر واتساب.</p>
+                <div class="fld"><label>الاسم الكامل *</label><input id="coName" placeholder="مثلاً: محمد علي"></div>
+                <div class="fld"><label>رقم الهاتف *</label><input id="coPhone" type="tel" placeholder="مثلاً: 7XXXXXXXX"></div>
+                <div class="fld"><label>العنوان / مكان التسليم *</label><input id="coAddress" placeholder="المدينة، الحي، أقرب معلم"></div>
+                <div class="fld"><label>ملاحظات (اختياري)</label><input id="coNotes" placeholder="أي تفاصيل إضافية للطلب"></div>
+                <div class="co-summary" id="coSummary"></div>
+                <button id="coSubmit" class="pm-add"><i class="fab fa-whatsapp"></i> إرسال الطلب عبر واتساب</button>
+            </div>
+        </div>
+    </div>
 
     <!-- منطق التطبيق -->
     <script src="app.js"></script>

@@ -480,6 +480,22 @@ body {
 .store-marker i { transform: rotate(45deg); color: #fff; font-size: 15px; }
 .store-marker.closed { background: #95a5a6; }
 
+/* ===== أسماء المحافظات ===== */
+.gov-label {
+    background: none !important;
+    border: none !important;
+    font-size: 13px;
+    font-weight: 800;
+    color: #2d3436;
+    text-shadow: 0 1px 4px rgba(255,255,255,.95), 0 0 10px rgba(255,255,255,.8);
+    font-family: 'Cairo', sans-serif;
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: .85;
+    letter-spacing: .5px;
+}
+
 /* ===== الاستجابة للهواتف ===== */
 @media (max-width: 520px) {
     .products-grid { grid-template-columns: 1fr; }

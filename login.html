@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول — يُسر</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <style>
+    .login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#f4f6f9 0,#e8eaef 100%)}
+    .login-card{background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.1);padding:40px 36px;width:min(420px,94vw);text-align:center}
+    .login-logo{font-size:34px;font-weight:800;color:var(--primary);margin-bottom:4px}
+    .login-logo i{color:var(--primary)}
+    .login-desc{color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.6}
+    .role-tabs{display:flex;gap:8px;margin-bottom:28px;background:var(--bg);border-radius:12px;padding:4px}
+    .role-tab{flex:1;padding:10px 12px;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;background:transparent;color:var(--muted);transition:.25s}
+    .role-tab i{margin-left:6px}
+    .role-tab.active{background:#fff;color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .role-tab:hover:not(.active){color:var(--ink)}
+    .login-form{text-align:right;transition:.3s}
+    .login-form .fld{margin-bottom:16px}
+    .login-form .fld label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px}
+    .login-form .fld input{width:100%;padding:12px 14px;border:2px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;transition:.2s;background:#fafbfc}
+    .login-form .fld input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(214,48,49,.12);background:#fff}
+    .btn-login{width:100%;padding:13px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:.25s;margin-top:4px}
+    .btn-login:hover{background:var(--primary-dark)}
+    .btn-login:disabled{opacity:.6;cursor:not-allowed}
+    .btn-login i{margin-left:6px}
+    .login-footer{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+    .login-footer a{color:var(--primary);text-decoration:none;font-weight:700}
+    .login-footer a:hover{text-decoration:underline}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .login-form:not(.hidden){animation:fadeIn .3s ease}
+  </style>
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-logo"><i class="fas fa-store"></i> يُسر</div>
+      <p class="login-desc">منصة المتاجر المحلية — اختر نوع الحساب للدخول</p>
+
+      <div class="role-tabs" role="tablist">
+        <button class="role-tab active" data-role="merchant" role="tab" aria-selected="true">
+          <i class="fas fa-store"></i> تاجر
+        </button>
+        <button class="role-tab" data-role="superadmin" role="tab" aria-selected="false">
+          <i class="fas fa-shield-halved"></i> سوبر أدمن
+        </button>
+      </div>
+
+      <div class="login-form" id="formMerchant" role="tabpanel">
+        <div class="fld"><label>البريد الإلكتروني</label><input id="lgEmail" type="email" placeholder="owner@example.com" autocomplete="email" dir="ltr"></div>
+        <div class="fld"><label>كلمة المرور</label><input id="lgPass" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+        <button class="btn-login" id="lgBtnMerchant"><i class="fas fa-arrow-left"></i> دخول</button>
+      </div>
+
+      <div class="login-form hidden" id="formSuperadmin" role="tabpanel">
+        <div class="fld"><label>اسم المستخدم</label><input id="saUser" type="text" placeholder="superadmin" autocomplete="username" dir="ltr"></div>
+        <div class="fld"><label>كلمة المرور</label><input id="saPass" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+        <button class="btn-login" id="lgBtnSuperadmin"><i class="fas fa-arrow-left"></i> دخول</button>
+      </div>
+
+      <div class="login-err" id="lgErr"></div>
+
+      <div class="login-footer">
+        <a href="index.html"><i class="fas fa-store"></i> العودة إلى المنصة</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="config.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>

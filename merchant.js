@@ -17,29 +17,18 @@ let PRODUCTS = [];             // منتجات المتجر
 function loadMerchants() { try { return JSON.parse(localStorage.getItem(MKEY)) || []; } catch (_) { return []; } }
 const storeKey = (sid) => "yusir_store_" + sid;
 
-/* ---------- تسجيل الدخول ---------- */
-$("lgBtn").addEventListener("click", login);
-$("lgPass").addEventListener("keydown", (e) => { if (e.key === "Enter") login(); });
+/* ---------- استعادة الجلسة ---------- */
 $("logout").addEventListener("click", () => { sessionStorage.removeItem(SESSION_KEY); location.reload(); });
 
-function login() {
-  const email = $("lgEmail").value.trim(), pass = $("lgPass").value;
-  const m = loadMerchants().find((x) => x.email === email && x.pass === pass);
-  if (!m) { $("lgErr").textContent = "بيانات الدخول غير صحيحة"; return; }
-  sessionStorage.setItem(SESSION_KEY, m.id);
-  start(m);
-}
-// استعادة الجلسة
 (function () {
   const sid = sessionStorage.getItem(SESSION_KEY);
-  if (sid) { const m = loadMerchants().find((x) => x.id === sid); if (m) start(m); }
+  const m = loadMerchants().find((x) => x.id === sid);
+  if (m) start(m);
 })();
 
 /* ---------- بدء اللوحة ---------- */
 async function start(m) {
   CURRENT = m;
-  $("login").classList.add("hidden");
-  $("app").classList.remove("hidden");
   $("storeBadge").textContent = m.store;
 
   // حالة الاشتراك

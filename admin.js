@@ -13,8 +13,29 @@ const ADMIN = {
 const fmt = (n) => Number(n).toLocaleString("ar-EG");
 
 /* تهيئة الخريطة */
-const map = L.map("map").setView([15.5527, 48.5164], 7);
+const map = L.map("map", {
+    maxBounds: [[12.0, 42.0], [20.0, 55.0]],
+    maxBoundsViscosity: 1,
+    minZoom: 6
+}).setView([15.5527, 48.5164], 7);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap" }).addTo(map);
+
+/* أسماء المحافظات */
+fetch("data/yem_admin1.geojson")
+    .then(res => res.json())
+    .then(gj => {
+        gj.features.forEach(f => {
+            const p = f.properties;
+            const lat = p.center_lat, lon = p.center_lon;
+            if (lat && lon && p.adm1_name1) {
+                L.marker([lat, lon], {
+                    icon: L.divIcon({ className: "gov-label", html: p.adm1_name1, iconSize: [140, 24], iconAnchor: [70, 12] }),
+                    interactive: false
+                }).addTo(map);
+            }
+        });
+    })
+    .catch(() => {});
 
 let pickMarker = null;
 map.on("click", (e) => {

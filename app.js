@@ -30,8 +30,13 @@ const fmt = (n) => Number(n).toLocaleString("ar-EG"); // تنسيق الأرقا
 /* ------------------------------------------------------------------
    الخطوة 1: تهيئة بيئة الخريطة وتثبيت النطاق الجغرافي لليمن
 ------------------------------------------------------------------ */
-const map = L.map("map", { zoomControl: true, attributionControl: true })
-    .setView([15.5527, 48.5164], 7); // المركز الجغرافي لليمن + Zoom = 7
+const map = L.map("map", {
+    zoomControl: true,
+    attributionControl: true,
+    maxBounds: [[12.0, 42.0], [20.0, 55.0]],
+    maxBoundsViscosity: 1,
+    minZoom: 6
+}).setView([15.5527, 48.5164], 7);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
@@ -50,7 +55,26 @@ function buildStoreIcon(isOpen) {
 }
 
 /* ------------------------------------------------------------------
-   الخطوة 1.b: الاستدعاء غير المتزامن لجلب ملف stores.geojson
+   الخطوة 1.b: تحميل وعرض أسماء المحافظات
+------------------------------------------------------------------ */
+fetch("data/yem_admin1.geojson")
+    .then(res => res.json())
+    .then(gj => {
+        gj.features.forEach(f => {
+            const p = f.properties;
+            const lat = p.center_lat, lon = p.center_lon;
+            if (lat && lon && p.adm1_name1) {
+                L.marker([lat, lon], {
+                    icon: L.divIcon({ className: "gov-label", html: p.adm1_name1, iconSize: [140, 24], iconAnchor: [70, 12] }),
+                    interactive: false
+                }).addTo(map);
+            }
+        });
+    })
+    .catch(() => {});
+
+/* ------------------------------------------------------------------
+   الخطوة 1.c: الاستدعاء غير المتزامن لجلب ملف stores.geojson
 ------------------------------------------------------------------ */
 fetch("data/stores.geojson")
     .then((res) => {

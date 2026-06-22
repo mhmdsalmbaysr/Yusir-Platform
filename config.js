@@ -14,5 +14,8 @@
 =================================================================== */
 window.YUSIR_CONFIG = {
     SUPABASE_URL: "",       // مثال: https://abcdxyz.supabase.co
-    SUPABASE_ANON_KEY: ""   // مفتاح anon public
+    SUPABASE_ANON_KEY: "",  // مفتاح anon public
+
+    // بيانات دخول السوبر أدمن (غيّرها فوراً)
+    SUPER_ADMIN: { user: "superadmin", pass: "yusir@2024" }
 };

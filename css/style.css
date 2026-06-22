@@ -412,6 +412,25 @@ body {
     font-family: inherit; font-size: 14px; background: transparent;
 }
 .search-count { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.open-toggle {
+    border: none; background: var(--bg); color: var(--muted);
+    width: 34px; height: 34px; border-radius: 50%; cursor: pointer;
+    font-size: 14px; flex-shrink: 0; transition: all var(--speed);
+}
+.open-toggle:hover { background: #e8eaed; }
+.open-toggle.active { background: var(--accent); color: #fff; }
+
+/* ===== نموذج إتمام الطلب ===== */
+.co-card { width: min(440px, 94vw); }
+.co-body { padding: 26px 22px 22px; }
+.co-body h2 { margin: 0 0 4px; font-size: 21px; }
+.co-body h2 i { color: var(--primary); }
+.co-sub { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
+.co-summary {
+    background: var(--bg); border-radius: 10px; padding: 12px 14px;
+    font-size: 13px; color: var(--ink); margin: 6px 0 16px; line-height: 1.8;
+}
+.co-summary .co-total { font-weight: 800; color: var(--primary); border-top: 1px dashed #d0d0d0; margin-top: 8px; padding-top: 8px; }
 
 /* ===== مؤشر المتجر على الخريطة ===== */
 .store-marker {

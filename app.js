@@ -164,16 +164,56 @@ function openStore(storeId) {
 }
 
 /* ------------------------------------------------------------------
-   نظام التقييمات والمراجعات (يُحفظ في متصفح العميل)
+   نظام التقييمات والمراجعات
+   يستخدم خلفية Supabase المشتركة إن ضُبطت في config.js،
+   وإلا يتراجع تلقائياً إلى التخزين المحلي (localStorage).
 ------------------------------------------------------------------ */
 const REVIEWS_KEY = "yusir_reviews_v1";
-function loadReviews() {
+const SB = (window.YUSIR_CONFIG && window.YUSIR_CONFIG.SUPABASE_URL && window.YUSIR_CONFIG.SUPABASE_ANON_KEY)
+    ? window.YUSIR_CONFIG : null;   // هل الخلفية مفعّلة؟
+
+// --- التخزين المحلي (احتياطي) ---
+function loadReviewsLocal() {
     try { return JSON.parse(localStorage.getItem(REVIEWS_KEY)) || {}; }
     catch (_) { return {}; }
 }
-function saveReviews(obj) {
+function saveReviewsLocal(obj) {
     try { localStorage.setItem(REVIEWS_KEY, JSON.stringify(obj)); } catch (_) {}
 }
+
+// --- جلب المراجعات (من الخلفية أو المحلي) ---
+async function fetchReviews(storeId) {
+    if (SB) {
+        try {
+            const url = `${SB.SUPABASE_URL}/rest/v1/reviews?store_id=eq.${encodeURIComponent(storeId)}&order=created_at.asc`;
+            const res = await fetch(url, { headers: { apikey: SB.SUPABASE_ANON_KEY, Authorization: "Bearer " + SB.SUPABASE_ANON_KEY } });
+            if (!res.ok) throw new Error(res.status);
+            const rows = await res.json();
+            return rows.map((r) => ({ name: r.name, text: r.text, stars: r.stars, date: r.created_at ? new Date(r.created_at).toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" }) : "" }));
+        } catch (e) { console.warn("Supabase fetch failed, using local:", e); }
+    }
+    return loadReviewsLocal()[storeId] || [];
+}
+
+// --- إرسال مراجعة (إلى الخلفية أو المحلي) ---
+async function postReview(storeId, review) {
+    if (SB) {
+        try {
+            const res = await fetch(`${SB.SUPABASE_URL}/rest/v1/reviews`, {
+                method: "POST",
+                headers: { apikey: SB.SUPABASE_ANON_KEY, Authorization: "Bearer " + SB.SUPABASE_ANON_KEY, "Content-Type": "application/json", Prefer: "return=minimal" },
+                body: JSON.stringify({ store_id: storeId, name: review.name, text: review.text, stars: review.stars })
+            });
+            if (!res.ok) throw new Error(res.status);
+            return true;
+        } catch (e) { console.warn("Supabase post failed, using local:", e); }
+    }
+    const data = loadReviewsLocal();
+    (data[storeId] = data[storeId] || []).push({ ...review, date: new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" }) });
+    saveReviewsLocal(data);
+    return true;
+}
+
 function starsHtml(n) {
     let s = "";
     for (let i = 1; i <= 5; i++) s += `<i class="fa${i <= Math.round(n) ? "s" : "r"} fa-star"></i>`;
@@ -186,20 +226,21 @@ function setStarInput(v) {
         el.className = (on ? "fas" : "far") + " fa-star";
     });
 }
-function renderReviews(storeId) {
+async function renderReviews(storeId) {
     const store = STATE.storesById[storeId];
     const baseRating = store ? (store.properties.rating || 0) : 0;
-    const all = loadReviews()[storeId] || [];
+    const list = document.getElementById("reviewsList");
+    list.innerHTML = '<div class="reviews-empty">جاري تحميل المراجعات…</div>';
 
-    // المتوسط = تقييم المتجر الأساسي + مراجعات العملاء
+    const all = await fetchReviews(storeId);
+    if (STATE.activeStore && STATE.activeStore.store_id !== storeId) return; // تغيّر المتجر أثناء التحميل
+
     const nums = all.map((r) => r.stars);
     const avg = (baseRating + nums.reduce((a, b) => a + b, 0)) / (1 + nums.length);
-
     document.getElementById("revAvg").textContent = avg.toFixed(1);
     document.getElementById("revStars").innerHTML = starsHtml(avg);
     document.getElementById("revCount").textContent = `(${all.length} مراجعة عميل)`;
 
-    const list = document.getElementById("reviewsList");
     list.innerHTML = "";
     if (all.length === 0) {
         list.innerHTML = '<div class="reviews-empty">كن أول من يكتب مراجعة لهذا المتجر ✍️</div>';
@@ -214,11 +255,11 @@ function renderReviews(storeId) {
                 <span class="rc-stars">${starsHtml(r.stars)}</span>
             </div>
             <div class="rc-text">${escapeHtml(r.text)}</div>
-            <div class="rc-date">${r.date}</div>`;
+            <div class="rc-date">${escapeHtml(r.date || "")}</div>`;
         list.appendChild(card);
     });
 }
-function submitReview() {
+async function submitReview() {
     if (!STATE.activeStore) return;
     const name = document.getElementById("revName").value.trim();
     const text = document.getElementById("revText").value.trim();
@@ -226,12 +267,11 @@ function submitReview() {
     if (!name || !text || !stars) { showToast("⚠️ أدخل اسمك، تقييماً بالنجوم، ونص المراجعة"); return; }
 
     const storeId = STATE.activeStore.store_id;
-    const data = loadReviews();
-    (data[storeId] = data[storeId] || []).push({
-        name, text, stars,
-        date: new Date().toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" })
-    });
-    saveReviews(data);
+    const btn = document.getElementById("revSubmit");
+    btn.disabled = true;
+    await postReview(storeId, { name, text, stars });
+    btn.disabled = false;
+
     document.getElementById("revName").value = "";
     document.getElementById("revText").value = "";
     setStarInput(0);

@@ -9,8 +9,18 @@ export const APP_CONFIG = Object.freeze({
     maxBounds: [[12.0, 42.0], [20.0, 55.0]],
     maxBoundsViscosity: 1,
     tileLayer: {
-      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
+      url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      attribution: 'Tiles &copy; <a href="https://esri.com">Esri</a>'
+    },
+    tileLayers: {
+      satellite: {
+        url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        attribution: 'Tiles &copy; Esri'
+      },
+      osm: {
+        url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
+      }
     }
   },
   storage: {

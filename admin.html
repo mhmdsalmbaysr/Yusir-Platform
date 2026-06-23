@@ -72,6 +72,21 @@
             </div>
 
             <div class="panel-block">
+                <h3><i class="fas fa-draw-polygon"></i> 4) بيانات الحقل — الأحياء والحارات</h3>
+                <div class="fld"><label>الاسم</label><input id="fdName" placeholder="مثلاً: حي الروضة"></div>
+                <div class="row2">
+                    <div class="fld"><label>النوع</label><select id="fdType"><option value="حي">حي</option><option value="حارة">حارة</option></select></div>
+                    <div class="fld"><label>المديرية</label><select id="fdDist"><option value="">اختر المديرية</option></select></div>
+                </div>
+                <button class="btn-add-prod" id="addFieldBtn"><i class="fas fa-plus"></i> إضافة موقع</button>
+                <div id="fieldList" class="saved-stores" style="margin-top:8px"></div>
+                <div class="export-row">
+                    <button class="btn-export" id="exportFieldBtn"><i class="fas fa-download"></i> تنزيل yem_field_data.geojson</button>
+                </div>
+                <p class="hint">انقر على الخريطة لتحديد الموقع، ثم أضف الحي/الحارة. حمّل الملف وارفعه إلى <code>data/yem_field_data.geojson</code>.</p>
+            </div>
+
+            <div class="panel-block">
                 <h3><i class="fas fa-database"></i> المتاجر المُسجّلة (<span id="storeCount">0</span>)</h3>
                 <div id="savedStores" class="saved-stores"></div>
                 <div class="export-row">
@@ -89,6 +104,6 @@
     </div>
 
     <div id="toast" class="toast"></div>
-    <script src="admin.js"></script>
+    <script type="module" src="src/admin-main.js"></script>
 </body>
 </html>

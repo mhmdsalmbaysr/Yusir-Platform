@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/dashboard.css">
-  <script>if (!sessionStorage.getItem("yusir_merchant_session")) location.replace("login.html?redirect=merchant");</script>
 </head>
 <body>
 
@@ -38,7 +37,8 @@
           <div class="fld"><label>الحي</label><input id="sHood"></div>
           <div class="fld"><label>واتساب</label><input id="sPhone"></div>
           <div class="fld"><label>رسوم التوصيل</label><input id="sDelivery" type="number"></div>
-          <div class="fld"><label>رابط صورة المتجر</label><input id="sImage"></div>
+          <div class="fld"><label>صورة المتجر</label><input id="sImage" type="file" accept="image/*"></div>
+          <div class="fld" style="grid-column:1/-1"><img id="sImagePreview" class="img-preview" style="display:none"></div>
           <div class="fld"><label>الحالة</label><select id="sOpen"><option value="true">مفتوح</option><option value="false">مغلق</option></select></div>
         </div>
         <div class="frm-actions"><button class="btn btn-g" id="saveStore"><i class="fas fa-floppy-disk"></i> حفظ بيانات المتجر</button></div>
@@ -52,7 +52,8 @@
           <div class="fld"><label>السعر</label><input id="pPrice" type="number"></div>
           <div class="fld"><label>السعر قبل الخصم (اختياري)</label><input id="pOld" type="number"></div>
           <div class="fld"><label>الوحدة</label><input id="pUnit" placeholder="قطعة"></div>
-          <div class="fld"><label>رابط الصورة</label><input id="pImage"></div>
+          <div class="fld"><label>صورة المنتج</label><input id="pImage" type="file" accept="image/*"></div>
+          <div class="fld" style="grid-column:1/-1"><img id="pImagePreview" class="img-preview" style="display:none"></div>
           <div class="fld" style="grid-column:1/-1"><label>الوصف</label><textarea id="pDesc" rows="2"></textarea></div>
         </div>
         <div class="frm-actions"><button class="btn btn-a" id="addProd"><i class="fas fa-plus"></i> إضافة المنتج</button></div>
@@ -72,7 +73,6 @@
   </div>
 
   <div id="toast" class="toast"></div>
-  <script src="config.js"></script>
-  <script src="merchant.js"></script>
+  <script type="module" src="src/merchant-main.js"></script>
 </body>
 </html>

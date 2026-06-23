@@ -26,6 +26,13 @@
             <span>منصة <strong>يُسر</strong></span>
         </div>
         <div class="topbar-actions">
+            <div class="dropdown" id="controlDropdown">
+                <button class="dropdown-btn" aria-label="لوحات التحكم"><i class="fas fa-sliders"></i></button>
+                <div class="dropdown-menu">
+                    <a href="login.html?redirect=merchant"><i class="fas fa-store"></i> لوحة التاجر</a>
+                    <a href="login.html?redirect=superadmin"><i class="fas fa-shield-halved"></i> لوحة السوبر أدمن</a>
+                </div>
+            </div>
             <button id="cartToggle" class="cart-btn" aria-label="عربة التسوق">
                 <i class="fas fa-shopping-cart"></i>
                 <span id="cartBadge" class="cart-badge">0</span>
@@ -80,7 +87,7 @@
         </div>
 
         <!-- شريط تصنيفات المنتجات -->
-        <div id="categoryBar" class="category-bar"></div>
+        <!-- <div id="categoryBar" class="category-bar"></div> -->
 
         <!-- حاوية المنتجات الديناميكية -->
         <div id="productsContainer" class="products-grid"></div>
@@ -181,9 +188,6 @@
         </div>
     </div>
 
-    <!-- إعدادات المنصة (الخلفية الاختيارية للمراجعات) -->
-    <script src="config.js"></script>
-    <!-- منطق التطبيق -->
-    <script src="app.js"></script>
+    <script type="module" src="src/main.js"></script>
 </body>
 </html>

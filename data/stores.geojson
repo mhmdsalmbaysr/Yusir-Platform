@@ -376,6 +376,247 @@
           14.5424
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "store_id": "ST-0007",
+        "name": "مخبز فوة",
+        "category": "مخبوزات ومعجنات",
+        "city": "المكلا",
+        "neighborhood": "فوة",
+        "phone": "+967770000007",
+        "rating": 4.3,
+        "delivery_fee": 700,
+        "open": true,
+        "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=80",
+        "products": [
+          {
+            "id": "P-7001",
+            "name": "خبز تمّن",
+            "price": 250,
+            "unit": "حبة",
+            "image": "https://images.unsplash.com/photo-1608198093002-ad4e005484b1?w=400&q=80",
+            "in_stock": true,
+            "category": "خبز",
+            "desc": "خبز تمّن يمني طازج يُخبز يومياً.",
+            "rating": 4.5
+          },
+          {
+            "id": "P-7002",
+            "name": "روتي بالحليب",
+            "price": 400,
+            "unit": "حبة",
+            "image": "https://images.unsplash.com/photo-1589365278144-c9e8b1ec0b4d?w=400&q=80",
+            "in_stock": true,
+            "category": "خبز",
+            "desc": "روتي بالحليب والسمن البلدي.",
+            "rating": 4.6
+          },
+          {
+            "id": "P-7003",
+            "name": "صمون كبير",
+            "price": 150,
+            "unit": "حبة",
+            "image": "https://images.unsplash.com/photo-1549931319-a545753467e3?w=400&q=80",
+            "in_stock": true,
+            "category": "خبز",
+            "desc": "صمون طري كبير مناسب للسندويشات.",
+            "rating": 4.2
+          }
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          49.0890,
+          14.5325
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "store_id": "ST-0008",
+        "name": "بقالة بويش",
+        "category": "بقالة",
+        "city": "المكلا",
+        "neighborhood": "بويش",
+        "phone": "+967770000008",
+        "rating": 4.1,
+        "delivery_fee": 500,
+        "open": true,
+        "image": "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=600&q=80",
+        "products": [
+          {
+            "id": "P-8001",
+            "name": "حليب نيدو 2.25 كجم",
+            "price": 5500,
+            "unit": "علبة",
+            "image": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&q=80",
+            "in_stock": true,
+            "category": "ألبان",
+            "desc": "حليب بودرة نيدو مدعم بالفيتامينات.",
+            "rating": 4.6
+          },
+          {
+            "id": "P-8002",
+            "name": "جبنة مثلثات 24 حبة",
+            "price": 1200,
+            "unit": "علبة",
+            "image": "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=400&q=80",
+            "in_stock": true,
+            "category": "ألبان",
+            "desc": "جبنة مثلثات كريمية طرية.",
+            "rating": 4.3
+          },
+          {
+            "id": "P-8003",
+            "name": "بيض أحمر 30 حبة",
+            "price": 2800,
+            "unit": "كرتونة",
+            "image": "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=400&q=80",
+            "in_stock": true,
+            "category": "ألبان وبيض",
+            "desc": "بيض أحمر بلدي طازج.",
+            "rating": 4.4
+          }
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          49.0550,
+          14.5250
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "store_id": "ST-0009",
+        "name": "أسماك الشرج",
+        "category": "أسماك ومأكولات بحرية",
+        "city": "الشحر",
+        "neighborhood": "السوق",
+        "phone": "+967770000009",
+        "rating": 4.7,
+        "delivery_fee": 1000,
+        "open": true,
+        "image": "https://images.unsplash.com/photo-1519966116332-f587d2b7b4d4?w=600&q=80",
+        "products": [
+          {
+            "id": "P-9001",
+            "name": "ثمد طازج 1 كجم",
+            "price": 3500,
+            "unit": "كجم",
+            "image": "https://images.unsplash.com/photo-1533518463840-db3a8d0c3480?w=400&q=80",
+            "in_stock": true,
+            "category": "أسماك",
+            "desc": "ثمد طازج من بحر حضرموت.",
+            "rating": 4.8
+          },
+          {
+            "id": "P-9002",
+            "name": "جمبري كبير 1 كجم",
+            "price": 8000,
+            "unit": "كجم",
+            "image": "https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=400&q=80",
+            "in_stock": true,
+            "category": "مأكولات بحرية",
+            "desc": "جمبري بحري كبير طازج.",
+            "old_price": 9500,
+            "rating": 4.9
+          },
+          {
+            "id": "P-9003",
+            "name": "كالماري 500 جم",
+            "price": 4500,
+            "unit": "علبة",
+            "image": "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&q=80",
+            "in_stock": true,
+            "category": "مأكولات بحرية",
+            "desc": "كالماري طازج نظيف ومجهز.",
+            "rating": 4.5
+          },
+          {
+            "id": "P-9004",
+            "name": "زبيدي 1 كجم",
+            "price": 5000,
+            "unit": "كجم",
+            "image": "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=400&q=80",
+            "in_stock": true,
+            "category": "أسماك",
+            "desc": "زبيدي طازج، مثالي للقلي.",
+            "rating": 4.7
+          }
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          49.6090,
+          14.7600
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "store_id": "ST-0010",
+        "name": "عطارة المكلا",
+        "category": "عطارة وبن",
+        "city": "المكلا",
+        "neighborhood": "سوق القطن",
+        "phone": "+967770000010",
+        "rating": 4.6,
+        "delivery_fee": 600,
+        "open": true,
+        "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80",
+        "products": [
+          {
+            "id": "P-10001",
+            "name": "بن لحجي 500 جم",
+            "price": 4500,
+            "unit": "علبة",
+            "image": "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&q=80",
+            "in_stock": true,
+            "category": "بن",
+            "desc": "بن لحجي محمص طازج من جبال اليمن.",
+            "rating": 4.9
+          },
+          {
+            "id": "P-10002",
+            "name": "عسل سدر جبلي 250 جم",
+            "price": 7000,
+            "unit": "علبة",
+            "image": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&q=80",
+            "in_stock": true,
+            "category": "عسل",
+            "desc": "عسل سدر جبلي نقي 100% من حضرموت.",
+            "old_price": 8500,
+            "rating": 5.0
+          },
+          {
+            "id": "P-10003",
+            "name": "بخور عود 10 جم",
+            "price": 3200,
+            "unit": "علبة",
+            "image": "https://images.unsplash.com/photo-1588401818884-6e0b6b8c6e0b?w=400&q=80",
+            "in_stock": true,
+            "category": "بخور",
+            "desc": "بخور عود طبيعي فاخر.",
+            "rating": 4.7
+          }
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          49.1100,
+          14.5400
+        ]
+      }
     }
   ]
 }

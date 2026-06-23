@@ -88,6 +88,51 @@ code { background: var(--bg); padding: 1px 5px; border-radius: 4px; font-size: 1
     letter-spacing: .5px;
 }
 
+.dist-label {
+    background: none !important; border: none !important;
+    font-size: 10px; font-weight: 700;
+    color: #636e72;
+    text-shadow: 0 1px 3px rgba(255,255,255,.9);
+    font-family: 'Cairo', sans-serif;
+    text-align: center; white-space: nowrap;
+    pointer-events: none; opacity: .7;
+    letter-spacing: .3px;
+}
+.field-chip {
+    display: inline-block;
+    background: rgba(255,255,255,.92);
+    border-radius: 12px; padding: 1px 8px;
+    font-size: 10px; font-weight: 700;
+    font-family: 'Cairo', sans-serif;
+    white-space: nowrap;
+    box-shadow: 0 1px 4px rgba(0,0,0,.12);
+    pointer-events: none; cursor: default;
+}
+.field-chip.hood { color: #0984e3; }
+.field-chip.lane { color: #e17055; }
+
+.osm-search-wrap { direction: rtl; }
+.osm-search-input {
+    width: 220px; padding: 8px 12px; font-size: 13px;
+    font-family: 'Cairo', sans-serif;
+    border: none; border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.18);
+    outline: none; background: #fff;
+}
+.osm-search-input:focus { box-shadow: 0 2px 12px rgba(0,0,0,.25); }
+.osm-results {
+    background: #fff; border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    max-height: 260px; overflow-y: auto;
+    margin-top: 2px; font-family: 'Cairo', sans-serif;
+}
+.osm-result-item {
+    padding: 8px 12px; font-size: 12px; cursor: pointer;
+    border-bottom: 1px solid #f0f0f0; line-height: 1.4;
+}
+.osm-result-item:hover { background: #e3f2fd; }
+.osm-result-item:last-child { border-bottom: none; }
+
 @media (max-width: 760px) {
     .admin-layout { grid-template-columns: 1fr; height: auto; }
     .admin-map-wrap { height: 50vh; }

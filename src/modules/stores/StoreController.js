@@ -27,19 +27,17 @@ export class StoreController {
   _renderMarkers(stores) {
     this._clearMarkers();
     stores.forEach(store => {
-      const marker = MarkerFactory.createStoreMarker(store, (s) => this._selectStore(s));
-      marker.addTo(this._map);
+      const marker = MarkerFactory.createStoreMarker(store);
       marker.bindPopup(PopupFactory.storePopup(store), { closeButton: false });
       marker.on("popupopen", () => {
         const btn = document.querySelector(".btn-view-store");
-        if (btn) {
-          btn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            const id = e.target.dataset.store;
-            this._selectStore(this._service.getById(id));
-          });
-        }
+        if (btn) btn.onclick = (e) => {
+          L.DomEvent.stopPropagation(e);
+          this._map.closePopup();
+          this._selectStore(store);
+        };
       });
+      marker.addTo(this._map);
       this._markers.push(marker);
     });
   }

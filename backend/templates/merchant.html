@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التاجر — يُسر</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+
+  <div id="app">
+    <div class="dash-top">
+      <div class="b"><i class="fas fa-store"></i> يُسر <span class="badge" id="storeBadge">متجري</span></div>
+      <div class="right">
+        <a class="linkx" href="{% url 'index' %}">عرض المنصة</a>
+        <button class="logout" id="logout"><i class="fas fa-right-from-bracket"></i> خروج</button>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div id="subBanner" class="sub-banner"></div>
+
+      <div class="stats">
+        <div class="stat blue"><i class="fas fa-box ic"></i><div class="n" id="stProducts">0</div><div class="l">عدد المنتجات</div></div>
+        <div class="stat green"><i class="fas fa-check ic"></i><div class="n" id="stInStock">0</div><div class="l">متوفّر</div></div>
+        <div class="stat red"><i class="fas fa-xmark ic"></i><div class="n" id="stOut">0</div><div class="l">نفد المخزون</div></div>
+      </div>
+
+      <div class="card">
+        <h3><i class="fas fa-store"></i> بيانات المتجر</h3>
+        <div class="frm">
+          <div class="fld"><label>اسم المتجر</label><input id="sName"></div>
+          <div class="fld"><label>التصنيف</label><input id="sCat"></div>
+          <div class="fld"><label>المدينة</label><input id="sCity"></div>
+          <div class="fld"><label>الحي</label><input id="sHood"></div>
+          <div class="fld"><label>واتساب</label><input id="sPhone"></div>
+          <div class="fld"><label>رسوم التوصيل</label><input id="sDelivery" type="number"></div>
+          <div class="fld"><label>صورة المتجر</label><input id="sImage" type="file" accept="image/*"></div>
+          <div class="fld" style="grid-column:1/-1"><img id="sImagePreview" class="img-preview" style="display:none"></div>
+          <div class="fld"><label>الحالة</label><select id="sOpen"><option value="true">مفتوح</option><option value="false">مغلق</option></select></div>
+        </div>
+        <div class="frm-actions"><button class="btn btn-g" id="saveStore"><i class="fas fa-floppy-disk"></i> حفظ بيانات المتجر</button></div>
+      </div>
+
+      <div class="card">
+        <h3><i class="fas fa-plus"></i> إضافة منتج</h3>
+        <div class="frm">
+          <div class="fld"><label>اسم المنتج</label><input id="pName"></div>
+          <div class="fld"><label>التصنيف</label><input id="pCat" placeholder="عام"></div>
+          <div class="fld"><label>السعر</label><input id="pPrice" type="number"></div>
+          <div class="fld"><label>السعر قبل الخصم (اختياري)</label><input id="pOld" type="number"></div>
+          <div class="fld"><label>الوحدة</label><input id="pUnit" placeholder="قطعة"></div>
+          <div class="fld"><label>صورة المنتج</label><input id="pImage" type="file" accept="image/*"></div>
+          <div class="fld" style="grid-column:1/-1"><img id="pImagePreview" class="img-preview" style="display:none"></div>
+          <div class="fld" style="grid-column:1/-1"><label>الوصف</label><textarea id="pDesc" rows="2"></textarea></div>
+        </div>
+        <div class="frm-actions"><button class="btn btn-a" id="addProd"><i class="fas fa-plus"></i> إضافة المنتج</button></div>
+      </div>
+
+      <div class="card">
+        <h3><i class="fas fa-boxes-stacked"></i> منتجاتي</h3>
+        <div id="prodGrid" class="prod-grid"></div>
+        <p class="muted" id="emptyP" style="display:none">لا توجد منتجات بعد.</p>
+        <div class="frm-actions" style="margin-top:16px">
+          <button class="btn btn-p" id="exportBtn"><i class="fas fa-download"></i> تصدير بيانات متجري (GeoJSON)</button>
+          <button class="btn btn-g" id="copyBtn"><i class="fas fa-copy"></i> نسخ JSON</button>
+        </div>
+        <p class="muted">سلّم الملف لمشرف المنصة لتحديث <code>data/stores.geojson</code>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script type="module" src="{% static 'src/merchant-main.js' %}"></script>
+</body>
+</html>

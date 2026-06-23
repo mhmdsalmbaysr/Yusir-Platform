@@ -48,8 +48,10 @@ class AdminApp {
     this._map = mm.map;
     this._layers = new LayerManager(this._map);
     this._events = new MapEvents(this._map);
-    this._layers.addBaseTile("default", APP_CONFIG.map.tileLayer.url);
-    this._layers.setBase("default");
+    const layers = APP_CONFIG.map.tileLayers;
+    this._layers.addBaseTile("satellite", layers.satellite.url, { attribution: layers.satellite.attribution });
+    this._layers.addBaseTile("osm", layers.osm.url, { attribution: layers.osm.attribution });
+    this._layers.setBase("satellite");
   }
 
   _initSearch() {

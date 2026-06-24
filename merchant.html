@@ -6,6 +6,8 @@
   <title>لوحة التاجر — يُسر</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
@@ -40,6 +42,14 @@
           <div class="fld"><label>صورة المتجر</label><input id="sImage" type="file" accept="image/*"></div>
           <div class="fld" style="grid-column:1/-1"><img id="sImagePreview" class="img-preview" style="display:none"></div>
           <div class="fld"><label>الحالة</label><select id="sOpen"><option value="true">مفتوح</option><option value="false">مغلق</option></select></div>
+          <div class="fld" style="grid-column:1/-1">
+            <label>موقع المتجر على الخريطة <span style="color:var(--muted);font-weight:400;font-size:12px">(اسحب العلامة)</span></label>
+            <div id="locMap" style="height:250px;border-radius:10px;border:1.5px solid var(--line);margin-top:4px;z-index:1"></div>
+            <div style="display:flex;gap:12px;margin-top:6px;font-size:12px;color:var(--muted)">
+              <span>خط الطول: <b id="locLng" style="color:var(--ink)">—</b></span>
+              <span>دائرة العرض: <b id="locLat" style="color:var(--ink)">—</b></span>
+            </div>
+          </div>
         </div>
         <div class="frm-actions"><button class="btn btn-g" id="saveStore"><i class="fas fa-floppy-disk"></i> حفظ بيانات المتجر</button></div>
       </div>
@@ -52,6 +62,7 @@
           <div class="fld"><label>السعر</label><input id="pPrice" type="number"></div>
           <div class="fld"><label>السعر قبل الخصم (اختياري)</label><input id="pOld" type="number"></div>
           <div class="fld"><label>الوحدة</label><input id="pUnit" placeholder="قطعة"></div>
+          <div class="fld"><label>الكمية المتوفرة</label><input id="pQty" type="number" value="1" min="0"></div>
           <div class="fld"><label>صورة المنتج</label><input id="pImage" type="file" accept="image/*"></div>
           <div class="fld" style="grid-column:1/-1"><img id="pImagePreview" class="img-preview" style="display:none"></div>
           <div class="fld" style="grid-column:1/-1"><label>الوصف</label><textarea id="pDesc" rows="2"></textarea></div>
@@ -64,7 +75,8 @@
         <div id="prodGrid" class="prod-grid"></div>
         <p class="muted" id="emptyP" style="display:none">لا توجد منتجات بعد.</p>
         <div class="frm-actions" style="margin-top:16px">
-          <button class="btn btn-p" id="exportBtn"><i class="fas fa-download"></i> تصدير بيانات متجري (GeoJSON)</button>
+          <button class="btn btn-p" id="exportBtn"><i class="fas fa-download"></i> تصدير إكسل</button>
+          <label class="btn btn-g" style="cursor:pointer"><i class="fas fa-upload"></i> استيراد إكسل <input id="importFile" type="file" accept=".xlsx,.xls" hidden></label>
           <button class="btn btn-g" id="copyBtn"><i class="fas fa-copy"></i> نسخ JSON</button>
         </div>
         <p class="muted">سلّم الملف لمشرف المنصة لتحديث <code>data/stores.geojson</code>.</p>
@@ -73,6 +85,74 @@
   </div>
 
   <div id="toast" class="toast"></div>
+
+  <div id="cropModal" class="crop-modal">
+    <div class="crop-card">
+      <div class="crop-head">
+        <span>تعديل الصورة</span>
+        <button id="cropClose" class="crop-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="crop-body">
+        <img id="cropImage" src="">
+      </div>
+      <div class="crop-actions">
+        <button class="btn btn-g" id="cropCancel">إلغاء</button>
+        <button class="btn btn-a" id="cropConfirm"><i class="fas fa-check"></i> تطبيق</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="editModal" class="crop-modal">
+    <div class="crop-card" style="max-height:90vh;overflow-y:auto">
+      <div class="crop-head">
+        <span>تعديل المنتج</span>
+        <button id="editClose" class="crop-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="crop-body" style="padding:18px;max-height:none;overflow:visible">
+        <div class="fld" style="margin-bottom:12px">
+          <label>اسم المنتج</label>
+          <input id="editName">
+        </div>
+        <div class="fld" style="margin-bottom:12px">
+          <label>السعر</label>
+          <input id="editPrice" type="number">
+        </div>
+        <div class="fld" style="margin-bottom:12px">
+          <label>التصنيف</label>
+          <input id="editCat" placeholder="عام">
+        </div>
+        <div class="fld" style="margin-bottom:12px">
+          <label>الوحدة</label>
+          <input id="editUnit" placeholder="قطعة">
+        </div>
+        <div class="fld" style="margin-bottom:12px">
+          <label>الوصف</label>
+          <textarea id="editDesc" rows="2"></textarea>
+        </div>
+        <div class="fld" style="margin-bottom:12px">
+          <label>الكمية المتوفرة</label>
+          <input id="editQty" type="number" min="0">
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;margin-bottom:12px;cursor:pointer;font-size:14px">
+          <input id="editInStock" type="checkbox" checked>
+          <span>متوفر في المخزون</span>
+        </label>
+        <div class="fld" style="margin-bottom:8px">
+          <label>صورة المنتج</label>
+          <input id="editImage" type="file" accept="image/*">
+        </div>
+        <img id="editImagePreview" class="img-preview" style="display:none">
+      </div>
+      <div class="crop-actions">
+        <button class="btn btn-g" id="editCancel">إلغاء</button>
+        <button class="btn btn-a" id="editSave"><i class="fas fa-check"></i> حفظ</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module" src="src/merchant-main.js"></script>
 </body>
 </html>

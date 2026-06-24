@@ -190,8 +190,8 @@ body {
 }
 .close-btn:hover { background: rgba(0, 0, 0, 0.8); }
 
-.store-hero { position: relative; height: 180px; flex-shrink: 0; }
-.store-hero img { width: 100%; height: 100%; object-fit: cover; }
+.store-hero { position: relative; aspect-ratio: 16 / 9; max-height: 220px; flex-shrink: 0; }
+.store-hero img { width: 100%; height: 100%; object-fit: cover; background: var(--bg); }
 .store-hero-overlay {
     position: absolute;
     bottom: 10px; right: 14px;
@@ -306,7 +306,7 @@ body {
     transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 .product-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,0.12); border-color: #e0e0e0; }
-.product-card .p-img { position: relative; height: 120px; background: var(--bg); overflow: hidden; }
+.product-card .p-img { position: relative; aspect-ratio: 3 / 2; background: var(--bg); overflow: hidden; }
 .product-card .p-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
 .product-card:hover .p-img img { transform: scale(1.08); }
 .discount-badge {
@@ -346,9 +346,10 @@ body {
 .product-card-sm:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.10); }
 .product-card-sm img {
     width: 100%;
-    height: 100px;
+    aspect-ratio: 3 / 2;
     object-fit: cover;
     display: block;
+    background: var(--bg);
 }
 .product-card-sm .pcs-info {
     padding: 8px 10px 4px;
@@ -403,7 +404,7 @@ body {
     background: rgba(0,0,0,0.5); color: #fff; cursor: pointer; font-size: 16px;
 }
 .pm-close:hover { background: rgba(0,0,0,0.8); }
-.pm-img { height: 240px; background: var(--bg); }
+.pm-img { aspect-ratio: 4 / 3; max-height: 300px; background: var(--bg); }
 .pm-img img { width: 100%; height: 100%; object-fit: cover; }
 .pm-body { padding: 18px 20px 22px; }
 .pm-cat { font-size: 12px; color: var(--muted); background: var(--bg); padding: 3px 10px; border-radius: 12px; }
@@ -459,7 +460,7 @@ body {
     border: 1px solid var(--line);
     align-items: center;
 }
-.cart-item img { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+.cart-item img { width: 56px; aspect-ratio: 1; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: var(--bg); }
 .ci-info { flex: 1; min-width: 0; }
 .ci-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
 .ci-price { font-size: 13px; color: var(--primary); font-weight: 700; }

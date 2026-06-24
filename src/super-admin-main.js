@@ -47,6 +47,7 @@ class SuperAdminApp {
   _addMerchant() {
     const store = $("mStore").value.trim();
     const owner = $("mOwner").value.trim();
+    const phone = $("mPhone").value.trim();
     const email = $("mEmail").value.trim();
     const pass = $("mPass").value.trim();
     const plan = $("mPlan").value;
@@ -64,14 +65,14 @@ class SuperAdminApp {
     expiry.setMonth(expiry.getMonth() + months);
     list.push({
       id: "M-" + Date.now(),
-      store, owner, email, pass, plan,
+      store, owner, phone, email, pass, plan,
       store_id: "ST-" + String(Date.now()).slice(-6),
       suspended: false,
       created: new Date().toISOString(),
       expiry: expiry.toISOString()
     });
     auth.saveMerchants(list);
-    ["mStore", "mOwner", "mEmail", "mPass"].forEach(id => $(id).value = "");
+    ["mStore", "mOwner", "mPhone", "mEmail", "mPass"].forEach(id => $(id).value = "");
     $("mMonths").value = 1;
     this._render();
     this._toast.show("✅ أُنشئ اشتراك المتجر");
@@ -122,6 +123,7 @@ class SuperAdminApp {
       tr.innerHTML = `
         <td><b>${esc(m.store)}</b><br><span class="muted">${esc(m.email)}</span></td>
         <td>${esc(m.owner)}</td>
+        <td dir="ltr" style="text-align:right">${m.phone ? esc(m.phone) : '<span class="muted">—</span>'}</td>
         <td>${PLANS[m.plan] ? PLANS[m.plan].name : m.plan}</td>
         <td><span class="pill ${st}">${statusLabel[st]}</span></td>
         <td>${new Date(m.expiry).toLocaleDateString("ar-EG")}</td>

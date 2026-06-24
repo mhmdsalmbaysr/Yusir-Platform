@@ -7,7 +7,7 @@ export class PopupFactory {
       ? '<span style="color:#27ae60">مفتوح</span>'
       : '<span style="color:#d63031">مغلق</span>';
     const img = p.image
-      ? `<img src="${p.image}" style="width:100%;height:120px;object-fit:cover;border-radius:6px;margin-bottom:6px" onerror="this.style.display='none'">`
+      ? `<img src="${p.image}" style="width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:6px;margin-bottom:6px;background:#f4f6f9" onerror="this.style.display='none'">`
       : "";
     const products = (p.products || []).slice(0, 3);
     const prodList = products.map(pr =>

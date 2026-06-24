@@ -18,7 +18,7 @@ export class StoreRepository {
 
   async loadFromApi(filters = {}) {
     try {
-      const data = await api.getStores(filters);
+      const data = await api.getStores({ ...filters, include_products: 'true' });
       this._stores = (data.results || data || []).map(s => ({
         type: "Feature",
         properties: {
@@ -32,7 +32,18 @@ export class StoreRepository {
           delivery_fee: s.delivery_fee,
           open: s.open,
           image: s.image,
-          products: [],
+          products: (s.products || []).map(p => ({
+            id: p.id,
+            name: p.name,
+            price: p.price,
+            category: p.category,
+            unit: p.unit,
+            image: p.image,
+            in_stock: p.in_stock,
+            desc: p.desc,
+            old_price: p.old_price,
+            rating: p.rating,
+          })),
         },
         geometry: {
           type: "Point",

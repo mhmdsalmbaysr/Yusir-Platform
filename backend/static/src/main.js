@@ -18,6 +18,7 @@ import { Toast } from "./shared/ui/Toast.js";
 import { APP_CONFIG } from "./core/config/app.js";
 import { eventBus } from "./core/services/EventBus.js";
 import { EVENTS } from "./core/constants/app.js";
+import { storage } from "./core/services/StorageService.js";
 
 class App {
   constructor() {
@@ -117,8 +118,7 @@ class App {
   }
 
   _initFieldData() {
-    fetch(APP_CONFIG.data.fieldData)
-      .then(r => r.json())
+    storage.fetchJSON(APP_CONFIG.data.fieldData)
       .then(gj => {
         if (!gj.features || gj.features.length === 0) return;
         const fieldLayer = L.geoJSON(gj, {

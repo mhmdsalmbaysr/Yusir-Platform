@@ -9,10 +9,6 @@ export const APP_CONFIG = Object.freeze({
     maxZoom: 19,
     maxBounds: [[12.0, 42.0], [20.0, 55.0]],
     maxBoundsViscosity: 1,
-    tileLayer: {
-      url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      attribution: 'Tiles &copy; <a href="https://esri.com">Esri</a>'
-    },
     tileLayers: {
       satellite: {
         url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",

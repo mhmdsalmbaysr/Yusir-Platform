@@ -10,7 +10,6 @@ export class LayerManager {
   addBaseTile(name, url, options = {}) {
     const layer = L.tileLayer(url, {
       maxZoom: APP_CONFIG.map.maxZoom,
-      attribution: APP_CONFIG.map.tileLayer.attribution,
       ...options
     });
     this._layers.set(name, layer);

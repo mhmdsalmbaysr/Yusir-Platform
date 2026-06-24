@@ -29,6 +29,8 @@ class StoreViewSet(viewsets.ModelViewSet):
         if self.request.method == 'POST':
             return StoreCreateSerializer
         if self.action == 'list':
+            if self.request.query_params.get('include_products', '').lower() == 'true':
+                return StoreDetailSerializer
             return StoreListSerializer
         return StoreDetailSerializer
 

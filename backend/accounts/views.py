@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from django.utils import timezone
 from datetime import timedelta
 import random
@@ -15,6 +15,8 @@ from .serializers import (
     LoginSerializer, MerchantCreateSerializer
 )
 
+UserModel = get_user_model()
+
 
 def _generate_store_id():
     return 'ST-' + ''.join(random.choices(string.digits, k=4))
@@ -25,10 +27,14 @@ def _generate_store_id():
 def login_view(request):
     serializer = LoginSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    user = authenticate(
-        username=serializer.validated_data['username'],
-        password=serializer.validated_data['password']
-    )
+    username_or_email = serializer.validated_data['username']
+    user = authenticate(username=username_or_email, password=serializer.validated_data['password'])
+    if not user:
+        try:
+            user_obj = UserModel.objects.get(email=username_or_email)
+            user = authenticate(username=user_obj.username, password=serializer.validated_data['password'])
+        except UserModel.DoesNotExist:
+            pass
     if not user:
         return Response({'error': 'اسم المستخدم أو كلمة المرور غير صحيحة'},
                         status=status.HTTP_401_UNAUTHORIZED)
@@ -44,6 +50,7 @@ def login_view(request):
 
 
 @api_view(['GET', 'PUT'])
+@permission_classes([permissions.IsAuthenticated])
 def me_view(request):
     if request.method == 'GET':
         data = UserSerializer(request.user).data

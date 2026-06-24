@@ -34,6 +34,7 @@ class AdminApp {
       await this._initStores();
       this._initFieldData();
       this._initMapClick();
+      this._initLayerToggle();
       this._initStoreForm();
       this._initProductForm();
       this._initExport();
@@ -246,6 +247,26 @@ class AdminApp {
         this._renderFieldItems();
       });
       wrap.appendChild(row);
+    });
+  }
+
+  _initLayerToggle() {
+    const dd = document.getElementById("controlDropdown");
+    if (!dd) return;
+    dd.querySelector(".dropdown-btn")?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dd.classList.toggle("open");
+    });
+    document.addEventListener("click", () => dd.classList.remove("open"));
+    dd.querySelectorAll(".drop-item[data-layer]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const name = btn.dataset.layer;
+        this._layers.setBase(name);
+        dd.querySelectorAll(".drop-item[data-layer]").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        dd.classList.remove("open");
+      });
     });
   }
 

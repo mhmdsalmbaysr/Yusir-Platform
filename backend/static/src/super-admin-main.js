@@ -19,7 +19,7 @@ class SuperAdminApp {
   init() {
     const session = auth.checkSession();
     if (!session || session.role !== "superadmin") {
-      location.replace("login.html?redirect=superadmin");
+      location.replace("/login/?redirect=superadmin");
       return;
     }
     this._initPlanSelect();

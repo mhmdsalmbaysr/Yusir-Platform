@@ -11,8 +11,8 @@ class LoginApp {
   init() {
     if (auth.checkSession()) {
       const user = auth.getCurrentUser();
-      if (user.role === "superadmin") location.replace("super-admin.html");
-      else location.replace("merchant.html");
+      if (user.role === "superadmin") location.replace("/super-admin/");
+      else location.replace("/merchant/");
       return;
     }
 
@@ -55,25 +55,33 @@ class LoginApp {
     $("saPass").addEventListener("keydown", (e) => { if (e.key === "Enter") this._loginSuperadmin(); });
   }
 
-  _loginMerchant() {
+  async _loginMerchant() {
     const email = $("lgEmail").value.trim();
     const pass = $("lgPass").value;
     if (!email || !pass) { $("lgErr").textContent = "أدخل البريد الإلكتروني وكلمة المرور"; return; }
-    if (auth.loginMerchant(email, pass)) {
-      location.href = "merchant.html";
-    } else {
-      $("lgErr").textContent = "بيانات الدخول غير صحيحة";
+    try {
+      if (await auth.loginMerchant(email, pass)) {
+        location.href = "/merchant/";
+      } else {
+        $("lgErr").textContent = "بيانات الدخول غير صحيحة";
+      }
+    } catch {
+      $("lgErr").textContent = "تعذّر الاتصال بالخادم";
     }
   }
 
-  _loginSuperadmin() {
+  async _loginSuperadmin() {
     const user = $("saUser").value.trim();
     const pass = $("saPass").value;
     if (!user || !pass) { $("lgErr").textContent = "أدخل اسم المستخدم وكلمة المرور"; return; }
-    if (auth.loginSuperAdmin(user, pass)) {
-      location.href = "super-admin.html";
-    } else {
-      $("lgErr").textContent = "بيانات الدخول غير صحيحة";
+    try {
+      if (await auth.loginSuperAdmin(user, pass)) {
+        location.href = "/super-admin/";
+      } else {
+        $("lgErr").textContent = "بيانات الدخول غير صحيحة";
+      }
+    } catch {
+      $("lgErr").textContent = "تعذّر الاتصال بالخادم";
     }
   }
 }

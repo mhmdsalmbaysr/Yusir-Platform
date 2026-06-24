@@ -34,6 +34,7 @@ export class StoreSidebar {
 
   _open(store) {
     const p = store.properties;
+    this._storeId = p.store_id;
     this._products = p.products || [];
     this._category = "الكل";
     this._query = "";
@@ -107,10 +108,10 @@ export class StoreSidebar {
       `;
       card.querySelector(".btn-add").addEventListener("click", (e) => {
         e.stopPropagation();
-        eventBus.emit(EVENTS.PRODUCT_SELECTED, { product: pr, storeId: pr.store_id });
+        eventBus.emit(EVENTS.PRODUCT_SELECTED, { product: pr, storeId: this._storeId });
       });
       card.addEventListener("click", () => {
-        eventBus.emit(EVENTS.PRODUCT_SELECTED, { product: pr, storeId: pr.store_id });
+        eventBus.emit(EVENTS.PRODUCT_SELECTED, { product: pr, storeId: this._storeId });
       });
       container.appendChild(card);
     });

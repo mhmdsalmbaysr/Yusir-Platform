@@ -4,10 +4,12 @@ import { $ } from "./core/helpers/dom.js";
 import { APP_CONFIG } from "./core/config/app.js";
 import { storage } from "./core/services/StorageService.js";
 import { auth } from "./modules/users/AuthService.js";
+import { GeoJsonService } from "./modules/map/GeoJsonService.js";
 
 class MerchantApp {
   constructor() {
     this._toast = new Toast();
+    this._geo = new GeoJsonService();
     this._user = null;
     this._store = null;
     this._products = [];
@@ -17,13 +19,15 @@ class MerchantApp {
   init() {
     this._user = auth.checkSession();
     if (!this._user || this._user.role !== "merchant") {
-      location.replace("login.html?redirect=merchant");
+      location.replace("/login/?redirect=merchant");
       return;
     }
     this._loadStore();
     this._initForm();
     this._initProductUpload();
     this._initProductForm();
+    this._initExport();
+    this._initLogout();
     this._renderOrders();
   }
 
@@ -35,6 +39,7 @@ class MerchantApp {
     }
     this._fillForm();
     this._renderProducts();
+    this._renderStats();
   }
 
   _persist() {
@@ -140,6 +145,18 @@ class MerchantApp {
     this._toast.show("✅ أُضيف المنتج");
   }
 
+  _renderStats() {
+    const total = this._products.length;
+    const inStock = this._products.filter(p => p.in_stock !== false).length;
+    const out = total - inStock;
+    const stP = $("stProducts");
+    const stI = $("stInStock");
+    const stO = $("stOut");
+    if (stP) stP.textContent = total;
+    if (stI) stI.textContent = inStock;
+    if (stO) stO.textContent = out;
+  }
+
   _renderProducts() {
     const wrap = $("prodGrid");
     if (!wrap) return;
@@ -161,6 +178,38 @@ class MerchantApp {
         this._renderProducts();
       });
       wrap.appendChild(card);
+    });
+  }
+
+  _buildFeatureCollection() {
+    const props = {
+      ...this._store,
+      products: this._products,
+    };
+    const feature = this._geo.createFeature(
+      { type: "Point", coordinates: props.longitude && props.latitude ? [props.longitude, props.latitude] : [0, 0] },
+      props
+    );
+    return this._geo.createCollection([feature], `yusir_store_${this._user.id}`);
+  }
+
+  _initExport() {
+    $("exportBtn")?.addEventListener("click", () => {
+      const fc = this._buildFeatureCollection();
+      this._geo.downloadJSON(fc, `store_${this._user.id}.geojson`);
+      this._toast.show("✅ تم التصدير");
+    });
+    $("copyBtn")?.addEventListener("click", async () => {
+      const fc = this._buildFeatureCollection();
+      const ok = await this._geo.copyToClipboard(fc);
+      this._toast.show(ok ? "📋 نُسخ JSON" : "⚠️ تعذّر النسخ");
+    });
+  }
+
+  _initLogout() {
+    $("logout")?.addEventListener("click", () => {
+      auth.logout();
+      location.replace("/login/");
     });
   }
 

@@ -34,7 +34,7 @@ export class CartUI {
       this._checkoutBtn.addEventListener("click", () => {
         const modal = document.getElementById("checkoutModal");
         if (modal) {
-          $("coSummary").textContent = `${this._cart.count} صنف — ${formatPrice(this._cart.total)}`;
+          this._renderSummary();
           modal.classList.add("active");
         }
       });
@@ -46,6 +46,27 @@ export class CartUI {
       this._panel.classList.toggle("active");
       if (this._panel.classList.contains("active")) this._render();
     }
+  }
+
+  _renderSummary() {
+    const el = $("coSummary");
+    if (!el) return;
+    const items = this._cart.items;
+    if (items.length === 0) { el.innerHTML = '<div class="cart-empty">السلة فارغة</div>'; return; }
+    let html = "";
+    items.forEach(item => {
+      const p = item.product;
+      html += `<div class="co-summary-item">
+        <span class="si-name">${p.name}</span>
+        <span class="si-qty">×${item.quantity}</span>
+        <span class="si-price">${formatPrice(p.price * item.quantity)}</span>
+      </div>`;
+    });
+    html += `<div class="co-total-row">
+      <span class="co-total-label">المجموع</span>
+      <span class="co-total-value">${formatPrice(this._cart.total)}</span>
+    </div>`;
+    el.innerHTML = html;
   }
 
   _onUpdate(data) {
@@ -66,9 +87,9 @@ export class CartUI {
     }
     items.forEach((item, i) => {
       const p = item.product;
-      const row = document.createElement("div");
-      row.className = "cart-item";
-      row.innerHTML = `
+      const card = document.createElement("div");
+      card.className = "cart-item";
+      card.innerHTML = `
         <img src="${p.image}" onerror="this.src='https://via.placeholder.com/60?text=—'" loading="lazy">
         <div class="ci-info">
           <div class="ci-name">${p.name}</div>
@@ -82,7 +103,7 @@ export class CartUI {
         <div class="ci-total">${formatPrice(p.price * item.quantity)}</div>
         <button class="ci-remove" data-i="${i}"><i class="fas fa-trash"></i></button>
       `;
-      row.querySelectorAll(".qty-btn").forEach(btn => {
+      card.querySelectorAll(".qty-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
           const idx = parseInt(e.currentTarget.dataset.i);
           const dir = parseInt(e.currentTarget.dataset.dir);
@@ -95,12 +116,12 @@ export class CartUI {
           this._render();
         });
       });
-      row.querySelector(".ci-remove").addEventListener("click", (e) => {
+      card.querySelector(".ci-remove").addEventListener("click", (e) => {
         const idx = parseInt(e.currentTarget.dataset.i);
         this._cart.remove(p.id, item.storeId);
         this._render();
       });
-      this._items.appendChild(row);
+      this._items.appendChild(card);
     });
     if (this._total) this._total.textContent = formatPrice(this._cart.total);
     if (this._checkoutBtn) this._checkoutBtn.disabled = false;

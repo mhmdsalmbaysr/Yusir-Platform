@@ -179,15 +179,41 @@
     <div id="checkoutModal" class="product-modal">
         <div class="pm-card co-card">
             <button id="coClose" class="pm-close" aria-label="إغلاق"><i class="fas fa-times"></i></button>
+            <div class="co-header">
+                <div class="co-header-icon"><i class="fas fa-clipboard-check"></i></div>
+                <h2>إتمام الطلب</h2>
+                <p class="co-sub">أدخل بياناتك لإرسال الطلب إلى المتجر</p>
+            </div>
             <div class="co-body">
-                <h2><i class="fas fa-clipboard-check"></i> إتمام الطلب</h2>
-                <p class="co-sub">أدخل بياناتك لإرسال الطلب إلى المتجر عبر واتساب.</p>
-                <div class="fld"><label>الاسم الكامل *</label><input id="coName" placeholder="مثلاً: محمد علي"></div>
-                <div class="fld"><label>رقم الهاتف *</label><input id="coPhone" type="tel" placeholder="مثلاً: 7XXXXXXXX"></div>
-                <div class="fld"><label>العنوان / مكان التسليم *</label><input id="coAddress" placeholder="المدينة، الحي، أقرب معلم"></div>
-                <div class="fld"><label>ملاحظات (اختياري)</label><input id="coNotes" placeholder="أي تفاصيل إضافية للطلب"></div>
-                <div class="co-summary" id="coSummary"></div>
-                <button id="coSubmit" class="pm-add"><i class="fab fa-whatsapp"></i> إرسال الطلب عبر واتساب</button>
+                <div class="co-section">
+                    <div class="co-section-title"><i class="fas fa-user"></i> معلومات العميل</div>
+                    <div class="co-fields">
+                        <div class="co-field">
+                            <label><i class="fas fa-user-circle"></i> الاسم الكامل <span class="req">*</span></label>
+                            <input id="coName" placeholder="محمد علي">
+                        </div>
+                        <div class="co-field">
+                            <label><i class="fas fa-phone"></i> رقم الهاتف <span class="req">*</span></label>
+                            <input id="coPhone" type="tel" placeholder="7XXXXXXXX">
+                        </div>
+                        <div class="co-field">
+                            <label><i class="fas fa-map-marker-alt"></i> عنوان التسليم <span class="req">*</span></label>
+                            <input id="coAddress" placeholder="المدينة، الحي، أقرب معلم">
+                        </div>
+                        <div class="co-field">
+                            <label><i class="fas fa-sticky-note"></i> ملاحظات</label>
+                            <input id="coNotes" placeholder="أي تفاصيل إضافية للطلب">
+                        </div>
+                    </div>
+                </div>
+                <div class="co-section">
+                    <div class="co-section-title"><i class="fas fa-shopping-bag"></i> ملخص الطلب</div>
+                    <div class="co-summary" id="coSummary"></div>
+                </div>
+                <button id="coSubmit" class="co-submit">
+                    <i class="fab fa-whatsapp"></i> إرسال الطلب عبر واتساب
+                    <span class="co-submit-arrow"><i class="fas fa-arrow-left"></i></span>
+                </button>
             </div>
         </div>
     </div>

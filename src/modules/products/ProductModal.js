@@ -21,21 +21,29 @@ export class ProductModal {
     if (this._addBtn) {
       this._addBtn.addEventListener("click", () => this._addToCart());
     }
+    document.getElementById("pmMinus")?.addEventListener("click", () => {
+      const q = parseInt($("pmQty").textContent) || 1;
+      if (q > 1) $("pmQty").textContent = q - 1;
+    });
+    document.getElementById("pmPlus")?.addEventListener("click", () => {
+      const q = parseInt($("pmQty").textContent) || 1;
+      $("pmQty").textContent = q + 1;
+    });
   }
 
   open(product, storeId, storeName) {
     this._currentProduct = product;
     this._currentStoreId = storeId;
-    $("pmStore").textContent = storeName || "";
     $("pmName").textContent = product.name;
     $("pmPrice").textContent = formatPrice(product.price);
-    $("pmUnit").textContent = product.unit || "";
     $("pmDesc").textContent = product.desc || "";
-    $("pmCat").textContent = product.category || "";
+    $("pmCategory").textContent = product.category || "";
+    $("pmRating").textContent = product.rating ?? "";
     $("pmImage").src = product.image || "https://via.placeholder.com/400x300?text=—";
     $("pmImage").onerror = function () { this.src = "https://via.placeholder.com/400x300?text=—"; };
-    $("pmOld").style.display = product.old_price ? "block" : "none";
+    $("pmOld").style.display = product.old_price ? "" : "none";
     if (product.old_price) $("pmOld").innerHTML = `<del>${formatPrice(product.old_price)}</del>`;
+    $("pmQty").textContent = "1";
     if (this._modal) this._modal.classList.add("active");
     document.body.style.overflow = "hidden";
   }
@@ -48,7 +56,11 @@ export class ProductModal {
 
   _addToCart() {
     if (this._currentProduct) {
-      this._onAddToCart(this._currentProduct, this._currentStoreId);
+      const qty = parseInt($("pmQty").textContent) || 1;
+      for (let i = 0; i < qty; i++) {
+        this._onAddToCart(this._currentProduct, this._currentStoreId);
+      }
+      this.close();
     }
   }
 }

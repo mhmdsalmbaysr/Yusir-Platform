@@ -9,7 +9,7 @@ import { StoreController } from "./modules/stores/StoreController.js";
 import { StoreSidebar } from "./modules/stores/StoreSidebar.js";
 import { CartManager } from "./modules/cart/CartManager.js";
 import { CartUI } from "./modules/cart/CartUI.js";
-import { ProductModal } from "./modules/products/ProductModal.js";
+
 import { CheckoutManager } from "./modules/checkout/CheckoutManager.js";
 import { ReviewService } from "./modules/reviews/ReviewService.js";
 import { ReviewUI } from "./modules/reviews/ReviewUI.js";
@@ -33,8 +33,9 @@ class App {
       this._initDistricts();
       await this._initStores();
       this._initCartUI();
-      this._initProductModal();
+
       this._initCheckout();
+      this._initProductCart();
       this._initReviews();
       this._initFieldData();
       this._initGlobalHandlers();
@@ -90,14 +91,10 @@ class App {
     new CartUI(this._cart);
   }
 
-  _initProductModal() {
-    const modal = new ProductModal((product, storeId) => {
+  _initProductCart() {
+    eventBus.on(EVENTS.PRODUCT_SELECTED, ({ product, storeId, storeName }) => {
       this._cart.add(product, storeId);
-      this._toast.show("✅ أُضيف للسلة");
-    });
-    eventBus.on(EVENTS.PRODUCT_SELECTED, ({ product, storeId }) => {
-      const s = this._storeCtrl?.selectedStore;
-      modal.open(product, storeId, s?.properties?.name);
+      this._toast.show(`✅ أُضيف "${product.name}" للسلة`);
     });
   }
 

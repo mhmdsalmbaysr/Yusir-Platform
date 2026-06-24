@@ -8,6 +8,8 @@ export class StoreSidebar {
     this._sidebar = $("storeSidebar");
     this._isOpen = false;
     this._products = [];
+    this._storeId = null;
+    this._storeName = "";
     this._category = "الكل";
     this._query = "";
 
@@ -35,6 +37,8 @@ export class StoreSidebar {
   _open(store) {
     const p = store.properties;
     this._products = p.products || [];
+    this._storeId = p.store_id;
+    this._storeName = p.name;
     this._category = "الكل";
     this._query = "";
 
@@ -107,10 +111,10 @@ export class StoreSidebar {
       `;
       card.querySelector(".btn-add").addEventListener("click", (e) => {
         e.stopPropagation();
-        eventBus.emit(EVENTS.PRODUCT_SELECTED, { product: pr, storeId: pr.store_id });
+        eventBus.emit(EVENTS.PRODUCT_SELECTED, { product: pr, storeId: this._storeId, storeName: this._storeName });
       });
       card.addEventListener("click", () => {
-        eventBus.emit(EVENTS.PRODUCT_SELECTED, { product: pr, storeId: pr.store_id });
+        eventBus.emit(EVENTS.PRODUCT_SELECTED, { product: pr, storeId: this._storeId, storeName: this._storeName });
       });
       container.appendChild(card);
     });

@@ -20,8 +20,8 @@ export class MapManager {
     if (this._ready) return this;
     const cfg = APP_CONFIG.map;
     this._map = L.map(this._containerId, {
-      zoomControl: true,
-      attributionControl: true,
+      zoomControl: false,
+      attributionControl: false,
       maxBounds: cfg.maxBounds,
       maxBoundsViscosity: cfg.maxBoundsViscosity,
       minZoom: cfg.minZoom,

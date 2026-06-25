@@ -806,3 +806,16 @@ body {
     .store-sidebar, .cart-panel { width: 100%; max-width: 100%; }
     :root { --panel-w: 100vw; }
 }
+
+@media (max-width: 350px) {
+    .cart-item { flex-wrap: wrap; padding: 8px; gap: 6px; }
+    .cart-item img { width: 42px; }
+    .ci-name { font-size: 12px; }
+    .ci-price { font-size: 11px; }
+    .ci-info { min-width: calc(100% - 52px); }
+    .ci-qty { order: 1; }
+    .ci-qty .qty-btn { width: 24px; height: 24px; font-size: 13px; }
+    .ci-qty span { font-size: 12px; min-width: 16px; }
+    .ci-total { order: 2; font-size: 12px; min-width: auto; margin-right: auto; }
+    .ci-remove { order: 3; }
+}

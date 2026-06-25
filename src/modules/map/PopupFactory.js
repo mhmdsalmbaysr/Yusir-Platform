@@ -4,8 +4,8 @@ export class PopupFactory {
   static storePopup(store) {
     const p = store.properties;
     const status = p.open !== false
-      ? '<span style="color:#27ae60">مفتوح</span>'
-      : '<span style="color:#d63031">مغلق</span>';
+      ? '<span style="color:#F28E6B">مفتوح</span>'
+      : '<span style="color:#dc2626">مغلق</span>';
     const img = p.image
       ? `<img src="${p.image}" style="width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:6px;margin-bottom:6px;background:#f4f6f9" onerror="this.style.display='none'">`
       : "";
@@ -26,7 +26,7 @@ export class PopupFactory {
         </div>
         ${prodList}
         <button class="btn-view-store" data-store="${p.store_id}"
-          style="width:100%;margin-top:6px;padding:6px;background:#d63031;color:#fff;border:none;border-radius:4px;cursor:pointer;font-family:'Cairo',sans-serif">
+          style="width:100%;margin-top:8px;padding:8px;background:#F28E6B;color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'Cairo',sans-serif;font-weight:700;font-size:13px">
           عرض المتجر ←
         </button>
       </div>`;

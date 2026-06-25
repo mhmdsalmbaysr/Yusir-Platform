@@ -44,17 +44,17 @@
 
 .prod-form { display: flex; flex-direction: column; gap: 8px; background: #fafafa; padding: 10px; border-radius: 10px; }
 .prod-form input { width: 100%; padding: 8px; border: 1px solid var(--line); border-radius: 8px; box-sizing: border-box; font-family: inherit; }
-.btn-add-prod { border: 1px dashed var(--accent); background: #eafaf1; color: var(--accent-dark);
+.btn-add-prod { border: 1px dashed var(--primary); background: #fff7ed; color: var(--primary-dark);
     padding: 9px; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: 700; }
-.btn-add-prod:hover { background: #d5f4e2; }
+.btn-add-prod:hover { background: #ffedd5; }
 
 .panel-actions { padding: 14px 0; }
 .btn-save-store {
-    width: 100%; border: none; background: var(--accent); color: #fff;
+    width: 100%; border: none; background: var(--primary); color: #fff;
     padding: 12px; border-radius: 10px; cursor: pointer; font-family: inherit;
     font-size: 15px; font-weight: 800;
 }
-.btn-save-store:hover { background: var(--accent-dark); }
+.btn-save-store:hover { background: var(--primary-dark); }
 
 .saved-stores { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
 .saved-row { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 8px 10px; background: var(--bg); border-radius: 8px; }

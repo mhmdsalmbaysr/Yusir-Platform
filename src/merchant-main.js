@@ -360,7 +360,7 @@ class MerchantApp {
         <div class="pc-body">
           <h4>${p.name}</h4>
           <div class="pc-price">${formatPrice(p.price)}</div>
-          <div class="pc-meta">${p.category} · ${p.unit} · <span style="color:${(p.stock_qty ?? 1) > 0 ? '#27ae60' : '#d63031'};font-weight:700">${(p.stock_qty ?? 1) > 0 ? (p.stock_qty ?? 1) + ' قطعة' : 'نفد'}</span></div>
+          <div class="pc-meta">${p.category} · ${p.unit} · <span style="color:${(p.stock_qty ?? 1) > 0 ? '#F28E6B' : '#dc2626'};font-weight:700">${(p.stock_qty ?? 1) > 0 ? (p.stock_qty ?? 1) + ' قطعة' : 'نفد'}</span></div>
           <div class="pc-actions">
             <button class="btn-edit" data-i="${i}"><i class="fas fa-pen"></i></button>
             <button class="btn-del" data-i="${i}"><i class="fas fa-trash"></i></button>

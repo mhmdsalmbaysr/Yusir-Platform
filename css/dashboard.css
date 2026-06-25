@@ -2,7 +2,7 @@
    لوحات تحكم يُسر — تنسيق موحّد (السوبر أدمن + التاجر)
    =================================================================== */
 :root{
-  --primary:#d63031; --primary-dark:#b71c1c; --accent:#27ae60; --accent-dark:#219150;
+  --primary:#f97316; --primary-dark:#ea580c; --accent:#1f2937; --accent-dark:#111827;
   --ink:#1a1a2e; --muted:#6b7280; --line:#e5e7eb; --bg:#f0f2f5; --radius:12px;
   --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
   --shadow-lg:0 10px 30px rgba(0,0,0,.08),0 4px 10px rgba(0,0,0,.04);
@@ -14,7 +14,8 @@ body{margin:0;font-family:'Cairo','Segoe UI',sans-serif;background:var(--bg);col
 /* شريط علوي */
 .dash-top{display:flex;align-items:center;justify-content:space-between;background:#fff;
   padding:12px 24px;box-shadow:0 1px 3px rgba(0,0,0,.06);position:sticky;top:0;z-index:50;
-  min-height:56px;backdrop-filter:blur(8px);background:rgba(255,255,255,.95)}
+  min-height:56px;backdrop-filter:blur(8px);background:rgba(255,255,255,.95);
+  border-bottom:2.5px solid var(--primary)}
 .dash-top .b{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800}
 .dash-top .b i{color:var(--primary)}
 .dash-top .badge{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;background:var(--bg);color:var(--muted)}
@@ -23,7 +24,7 @@ body{margin:0;font-family:'Cairo','Segoe UI',sans-serif;background:var(--bg);col
 .logout:hover{background:#f3f4f6;color:var(--ink)}
 .logout i{margin-left:4px}
 .linkx{text-decoration:none;color:var(--primary);font-weight:600;font-size:13px;padding:4px 8px;border-radius:6px;transition:background var(--transition)}
-.linkx:hover{background:#fef2f2}
+.linkx:hover{background:#fff7ed;color:#ea580c}
 
 .wrap{max-width:1120px;margin:0 auto;padding:24px}
 
@@ -35,13 +36,13 @@ body{margin:0;font-family:'Cairo','Segoe UI',sans-serif;background:var(--bg);col
 .stat .n{font-size:22px;font-weight:800;line-height:1.2}
 .stat .l{font-size:13px;color:var(--muted);margin-top:4px;font-weight:500}
 .stat .ic{font-size:22px;float:left;opacity:.7;margin-top:4px}
-.stat.green .n{color:var(--accent)} .stat.green .ic{color:var(--accent)}
-.stat.red .n{color:var(--primary)} .stat.red .ic{color:var(--primary)}
-.stat.blue .n{color:#2563eb} .stat.blue .ic{color:#2563eb}
+.stat.green .n{color:#d97706} .stat.green .ic{color:#d97706}
+.stat.red .n{color:#dc2626} .stat.red .ic{color:#dc2626}
+.stat.blue .n{color:var(--primary)} .stat.blue .ic{color:var(--primary)}
 .stat::after{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.stat.green::after{background:var(--accent)}
-.stat.red::after{background:var(--primary)}
-.stat.blue::after{background:#2563eb}
+.stat.green::after{background:#d97706}
+.stat.red::after{background:#dc2626}
+.stat.blue::after{background:var(--primary)}
 
 /* بطاقات/أقسام */
 .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:20px;
@@ -65,13 +66,13 @@ tr:hover td{background:#f9fafb}
 /* أزرار */
 .btn{border:none;border-radius:8px;padding:9px 16px;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;
   display:inline-flex;align-items:center;gap:6px;transition:all var(--transition);line-height:1.4}
-.btn-p{background:var(--primary);color:#fff}.btn-p:hover{background:var(--primary-dark);box-shadow:0 2px 8px rgba(214,48,49,.35)}
-.btn-a{background:var(--accent);color:#fff}.btn-a:hover{background:var(--accent-dark);box-shadow:0 2px 8px rgba(39,174,96,.35)}
-.btn-g{background:#fff;color:var(--ink);border:1px solid var(--line)}.btn-g:hover{background:#f9fafb;border-color:#d1d5db}
+.btn-p{background:var(--primary);color:#fff}.btn-p:hover{background:var(--primary-dark);box-shadow:0 2px 8px rgba(242,142,107,.35)}
+.btn-a{background:var(--primary);color:#fff}.btn-a:hover{background:var(--primary-dark);box-shadow:0 2px 8px rgba(242,142,107,.35)}
+.btn-g{background:#fff;color:var(--ink);border:1px solid var(--line)}.btn-g:hover{background:#fff7ed;border-color:#fdba74}
 .btn-sm{padding:6px 10px;font-size:12px}
 .btn-icon{border:none;background:none;cursor:pointer;font-size:14px;padding:6px;border-radius:6px;transition:all var(--transition);color:var(--muted)}
 .btn-icon:hover{background:#f3f4f6;color:var(--ink)}
-.btn-icon.del:hover{background:#fef2f2;color:var(--primary)} .btn-icon.edit:hover{background:#eff6ff;color:#2563eb}
+.btn-icon.del:hover{background:#fef2f2;color:#dc2626} .btn-icon.edit:hover{background:#fff7ed;color:var(--primary)}
 .row-actions{display:flex;gap:4px;align-items:center}
 
 /* نماذج */
@@ -81,7 +82,7 @@ tr:hover td{background:#f9fafb}
 .fld input,.fld select,.fld textarea{padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;width:100%;
   background:#fff;transition:border-color var(--transition),box-shadow var(--transition);color:var(--ink)}
 .fld input:hover,.fld select:hover,.fld textarea:hover{border-color:#d1d5db}
-.fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(214,48,49,.1)}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(242,142,107,.1)}
 .fld input::placeholder{color:#b0b7c3}
 .frm-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
 
@@ -89,7 +90,8 @@ tr:hover td{background:#f9fafb}
 .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
   background:linear-gradient(135deg,#f0f2f5 0,#e5e7eb 100%)}
 .login-box{background:#fff;border-radius:18px;box-shadow:var(--shadow-lg);padding:36px 32px;width:min(380px,94vw)}
-.login-box .logo{text-align:center;font-size:28px;font-weight:800;color:var(--primary);margin-bottom:4px}
+.login-box .logo{display:flex;justify-content:center;margin-bottom:12px}
+.login-box .logo img{height:48px;width:auto}
 .login-box .sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:24px}
 .login-box .fld{margin-bottom:16px}
 .login-box .btn{width:100%;padding:12px;font-size:15px}
@@ -129,15 +131,15 @@ tr:hover td{background:#f9fafb}
 .pc .pcn,.product-card .pc-body h4{font-weight:700;font-size:15px;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pc .pcp,.product-card .pc-price{color:var(--primary);font-weight:800;font-size:16px;margin:0}
 .product-card .pc-meta{font-size:12px;color:var(--muted);margin:6px 0 12px;line-height:1.5}
-.product-card .btn-del{border:none;background:#fef2f2;color:var(--primary);padding:7px 14px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;transition:all var(--transition);flex:1;justify-content:center}
-.product-card .btn-del:hover{background:var(--primary);color:#fff}
+.product-card .btn-del{border:none;background:#fef2f2;color:#dc2626;padding:7px 14px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;transition:all var(--transition);flex:1;justify-content:center}
+.product-card .btn-del:hover{background:#dc2626;color:#fff}
 .pc .pca,.pc-actions{display:flex;gap:8px;margin-top:10px}
-.btn-edit{border:none;background:#eff6ff;color:#2563eb;padding:7px 14px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;transition:all var(--transition);flex:1;justify-content:center}
-.btn-edit:hover{background:#2563eb;color:#fff}
+.btn-edit{border:none;background:#fff7ed;color:var(--primary);padding:7px 14px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;transition:all var(--transition);flex:1;justify-content:center}
+.btn-edit:hover{background:var(--primary);color:#fff}
 .img-preview{max-width:120px;max-height:120px;border-radius:8px;border:1px solid var(--line);margin-top:6px;object-fit:cover;background:var(--bg)}
 .muted{color:var(--muted);font-size:13px}
 .sub-banner{padding:12px 16px;border-radius:10px;margin-bottom:20px;font-weight:700;font-size:14px}
-.sub-banner.ok{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
+.sub-banner.ok{background:#fff7ed;color:#c2410c;border:1px solid #fdba74}
 .sub-banner.bad{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
 
 /* استجابة */

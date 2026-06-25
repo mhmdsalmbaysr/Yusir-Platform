@@ -12,7 +12,7 @@ export class MarkerFactory {
   static pickIcon() {
     return L.divIcon({
       className: "pick-marker",
-      html: '<div style="background:#d63031;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)"><i class="fas fa-map-pin" style="font-size:14px"></i></div>',
+      html: '<div style="background:#F28E6B;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)"><i class="fas fa-map-pin" style="font-size:14px"></i></div>',
       iconSize: [28, 28],
       iconAnchor: [14, 14]
     });

@@ -15,8 +15,8 @@ export function createElement(tag, attrs = {}, children = []) {
   Object.entries(attrs).forEach(([k, v]) => {
     if (k === "className") el.className = v;
     else if (k === "style" && typeof v === "object") Object.assign(el.style, v);
-    else if (k.startsWith("data")) el.dataset[k.slice(4).toLowerCase()] = v;
-    else if (k.startsWith("on")) el.addEventListener(k.slice(2).toLowerCase(), v);
+    else if (k.startsWith("data-")) el.dataset[k.slice(5).toLowerCase()] = v;
+    else if (k.startsWith("on") && k.length > 2 && typeof v === "function") el.addEventListener(k.slice(2).toLowerCase(), v);
     else el.setAttribute(k, v);
   });
   children.forEach(c => {

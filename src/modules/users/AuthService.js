@@ -56,7 +56,17 @@ class AuthService {
   }
 
   getMerchants() {
-    try { return JSON.parse(localStorage.getItem(APP_CONFIG.storage.merchantsKey)) || []; } catch { return []; }
+    try {
+      const raw = localStorage.getItem(APP_CONFIG.storage.merchantsKey);
+      if (!raw) {
+        const defaults = [
+          { id: "M-DEMO-001", email: "merchant@demo.com", pass: "demo123", name: "متجر تجريبي", phone: "+967700000000" }
+        ];
+        this.saveMerchants(defaults);
+        return defaults;
+      }
+      return JSON.parse(raw) || [];
+    } catch { return []; }
   }
 
   saveMerchants(list) {

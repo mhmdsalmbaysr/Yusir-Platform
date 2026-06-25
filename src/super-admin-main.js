@@ -29,14 +29,17 @@ class SuperAdminApp {
 
   _initPlanSelect() {
     const sel = $("mPlan");
+    if (!sel) return;
     sel.innerHTML = Object.entries(PLANS)
       .map(([k, v]) => `<option value="${k}">${v.name} — ${fmt(v.price)} ريال/شهر</option>`)
       .join("");
   }
 
   _initEvents() {
-    $("logout").addEventListener("click", () => { auth.logout(); location.reload(); });
-    $("addM").addEventListener("click", () => this._addMerchant());
+    const logoutBtn = $("logout");
+    if (logoutBtn) logoutBtn.addEventListener("click", () => { auth.logout(); location.href = "login.html"; });
+    const addBtn = $("addM");
+    if (addBtn) addBtn.addEventListener("click", () => this._addMerchant());
   }
 
   _statusOf(m) {
@@ -45,21 +48,21 @@ class SuperAdminApp {
   }
 
   _addMerchant() {
-    const store = $("mStore").value.trim();
-    const owner = $("mOwner").value.trim();
-    const phone = $("mPhone").value.trim();
-    const email = $("mEmail").value.trim();
-    const pass = $("mPass").value.trim();
-    const plan = $("mPlan").value;
-    const months = parseInt($("mMonths").value) || 1;
-    if (!store || !owner || !email || !pass) {
-      this._toast.show("⚠️ أكمل كل الحقول");
-      return;
+    const getVal = (id) => { const el = $(id); return el ? el.value.trim() : ""; };
+    const store = getVal("mStore");
+    const owner = getVal("mOwner");
+    const phone = getVal("mPhone");
+    const email = getVal("mEmail");
+    const pass = getVal("mPass");
+    const planEl = $("mPlan"); const monthsEl = $("mMonths");
+    if (!store || !owner || !email || !pass || !planEl || !monthsEl) {
+      this._toast.show("⚠️ أكمل كل الحقول"); return;
     }
+    const plan = planEl.value;
+    const months = parseInt(monthsEl.value) || 1;
     const list = auth.getMerchants();
     if (list.some(m => m.email === email)) {
-      this._toast.show("⚠️ البريد مستخدم مسبقاً");
-      return;
+      this._toast.show("⚠️ البريد مستخدم مسبقاً"); return;
     }
     const expiry = new Date();
     expiry.setMonth(expiry.getMonth() + months);
@@ -72,8 +75,8 @@ class SuperAdminApp {
       expiry: expiry.toISOString()
     });
     auth.saveMerchants(list);
-    ["mStore", "mOwner", "mPhone", "mEmail", "mPass"].forEach(id => $(id).value = "");
-    $("mMonths").value = 1;
+    ["mStore", "mOwner", "mPhone", "mEmail", "mPass"].forEach(id => { const el = $(id); if (el) el.value = ""; });
+    if (monthsEl) monthsEl.value = 1;
     this._render();
     this._toast.show("✅ أُنشئ اشتراك المتجر");
   }
@@ -140,11 +143,13 @@ class SuperAdminApp {
       body.appendChild(tr);
     });
 
-    $("stTotal").textContent = list.length;
-    $("stActive").textContent = active;
-    $("stExpired").textContent = expired;
-    $("stRevenue").textContent = fmt(revenue);
-    $("emptyM").style.display = list.length ? "none" : "block";
+    const setText = (id, val) => { const el = $(id); if (el) el.textContent = val; };
+    setText("stTotal", list.length);
+    setText("stActive", active);
+    setText("stExpired", expired);
+    setText("stRevenue", fmt(revenue));
+    const emptyEl = $("emptyM");
+    if (emptyEl) emptyEl.style.display = list.length ? "none" : "block";
   }
 }
 

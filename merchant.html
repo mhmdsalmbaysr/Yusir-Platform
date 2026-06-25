@@ -14,7 +14,7 @@
 
   <div id="app">
     <div class="dash-top">
-      <div class="b"><img src="src/assets/ecolance.png" alt="Ecolance" class="brand-logo" style="height:36px"><span class="badge" id="storeBadge">متجري</span></div>
+      <div class="b"><img src="src/assets/ecolance.png" alt="Ecolance" class="brand-logo"><span class="badge" id="storeBadge">متجري</span></div>
       <div class="right">
         <a class="linkx" href="index.html">عرض المنصة</a>
         <button class="logout" id="logout"><i class="fas fa-right-from-bracket"></i> خروج</button>
@@ -35,7 +35,8 @@
         <div class="frm">
           <div class="fld"><label>اسم المتجر</label><input id="sName"></div>
           <div class="fld"><label>التصنيف</label><input id="sCat"></div>
-          <div class="fld"><label>المدينة</label><input id="sCity"></div>
+          <div class="fld"><label>المحافظة</label><select id="sGov"><option value="">— اختر المحافظة —</option></select></div>
+          <div class="fld"><label>المديرية</label><select id="sDist"><option value="">— اختر المديرية —</option></select></div>
           <div class="fld"><label>الحي</label><input id="sHood"></div>
           <div class="fld"><label>واتساب</label><input id="sPhone"></div>
           <div class="fld"><label>رسوم التوصيل</label><input id="sDelivery" type="number"></div>

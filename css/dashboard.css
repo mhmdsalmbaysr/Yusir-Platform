@@ -2,7 +2,7 @@
    لوحات تحكم يُسر — تنسيق موحّد (السوبر أدمن + التاجر)
    =================================================================== */
 :root{
-  --primary:#f97316; --primary-dark:#ea580c; --accent:#1f2937; --accent-dark:#111827;
+  --primary:#F28E6B; --primary-dark:#e07a58; --accent:#1E2A3A; --accent-dark:#151F2C;
   --ink:#1a1a2e; --muted:#6b7280; --line:#e5e7eb; --bg:#f0f2f5; --radius:12px;
   --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
   --shadow-lg:0 10px 30px rgba(0,0,0,.08),0 4px 10px rgba(0,0,0,.04);
@@ -16,15 +16,16 @@ body{margin:0;font-family:'Cairo','Segoe UI',sans-serif;background:var(--bg);col
   padding:12px 24px;box-shadow:0 1px 3px rgba(0,0,0,.06);position:sticky;top:0;z-index:50;
   min-height:56px;backdrop-filter:blur(8px);background:rgba(255,255,255,.95);
   border-bottom:2.5px solid var(--primary)}
-.dash-top .b{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800}
+.dash-top .b{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800;flex-shrink:0}
 .dash-top .b i{color:var(--primary)}
 .dash-top .badge{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;background:var(--bg);color:var(--muted)}
+.dash-top .brand-logo,.dash-top img.brand-logo{height:22px;width:auto;max-width:100px;object-fit:contain;flex-shrink:0;display:inline-block}
 .dash-top .right{display:flex;align-items:center;gap:8px}
 .logout{border:none;background:transparent;color:var(--muted);padding:8px 12px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:600;font-size:13px;transition:all var(--transition)}
 .logout:hover{background:#f3f4f6;color:var(--ink)}
 .logout i{margin-left:4px}
 .linkx{text-decoration:none;color:var(--primary);font-weight:600;font-size:13px;padding:4px 8px;border-radius:6px;transition:background var(--transition)}
-.linkx:hover{background:#fff7ed;color:#ea580c}
+.linkx:hover{background:#fff5f0;color:var(--primary-dark)}
 
 .wrap{max-width:1120px;margin:0 auto;padding:24px}
 
@@ -36,13 +37,15 @@ body{margin:0;font-family:'Cairo','Segoe UI',sans-serif;background:var(--bg);col
 .stat .n{font-size:22px;font-weight:800;line-height:1.2}
 .stat .l{font-size:13px;color:var(--muted);margin-top:4px;font-weight:500}
 .stat .ic{font-size:22px;float:left;opacity:.7;margin-top:4px}
-.stat.green .n{color:#d97706} .stat.green .ic{color:#d97706}
+.stat.green .n{color:#059669} .stat.green .ic{color:#059669}
 .stat.red .n{color:#dc2626} .stat.red .ic{color:#dc2626}
 .stat.blue .n{color:var(--primary)} .stat.blue .ic{color:var(--primary)}
+.stat.gold .n{color:#d97706} .stat.gold .ic{color:#d97706}
 .stat::after{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.stat.green::after{background:#d97706}
+.stat.green::after{background:#059669}
 .stat.red::after{background:#dc2626}
 .stat.blue::after{background:var(--primary)}
+.stat.gold::after{background:#d97706}
 
 /* بطاقات/أقسام */
 .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:20px;
@@ -122,11 +125,13 @@ tr:hover td{background:#f9fafb}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
 /* منتجات التاجر */
-.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;max-width:900px}
 .pc,.product-card{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;
   transition:box-shadow var(--transition),transform var(--transition)}
 .pc:hover,.product-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
-.pc img,.product-card>img{width:100%;aspect-ratio:3/2;object-fit:cover;background:var(--bg)}
+.pc-img-wrap,.pc img{overflow:hidden;background:var(--bg)}
+.product-card .pc-img-wrap{width:100%;aspect-ratio:3/2;max-height:200px}
+.product-card .pc-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
 .pc .pcb,.product-card .pc-body{padding:14px}
 .pc .pcn,.product-card .pc-body h4{font-weight:700;font-size:15px;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pc .pcp,.product-card .pc-price{color:var(--primary);font-weight:800;font-size:16px;margin:0}
